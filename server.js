@@ -22,7 +22,7 @@ app.set("layout", "./layouts/layout"); // Not at views root
 /* ***********************
  * Middleware for Static Files
  *************************/
-app.use(express.static("public"));  // This serves static files from the "public" folder
+app.use(express.static("public")); // This serves static files from the "public" folder
 app.use("/css", express.static(__dirname + "/public/css"));
 app.use("/js", express.static(__dirname + "/public/js"));
 app.use("/images", express.static(__dirname + "/public/images"));
@@ -30,7 +30,7 @@ app.use("/images", express.static(__dirname + "/public/images"));
 /* ***********************
  * Routes
  *************************/
-app.use(staticRoutes); // Serving static routes, ensure staticRoutes is defined correctly
+app.use(staticRoutes); // Corrected: Ensure we use the right variable for static routes
 
 /* ***********************
  * Local Server Information
