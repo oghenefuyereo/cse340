@@ -113,6 +113,7 @@ main .content {
   border-radius: 8px; 
   border: 4px solid #007bff; 
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+  height: 850px;
 }
 
 .intro {
@@ -122,7 +123,8 @@ main .content {
 
 .intro h2 {
   font-size: 32px;
-  margin-bottom: 20px;
+  
+  margin-left: -700px;
 }
 
 .intro .car-image {
@@ -174,6 +176,8 @@ main .content {
   padding: 10px;
   margin-top: -200px;
 }
+
+
 /* Delorean Upgrades Section */
 .upgrades {
   margin-top: 40px;
@@ -182,47 +186,70 @@ main .content {
 .upgrades h3 {
   font-size: 28px;
   margin-bottom: 20px;
-  text-align: center;
+  font-weight: bold;
 }
 
 .upgrade-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  justify-items: center;
+  display: grid; /* Using grid layout */
+  grid-template-columns: repeat(2, 1fr); /* 2 equal-width columns */
+  grid-template-rows: repeat(2, 1fr); /* 2 equal-height rows */
+  gap: 20px; /* Equal gap between both rows and columns */
+  width: 50px;
 }
 
 .upgrade {
   text-align: center;
+  background-color: #00bcd4; /* Light cyan background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow around each item */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically and horizontally */
+width: 150px;
 }
 
 .upgrade img {
-  width: 100px;
-  height: 100px;
+  width: 80px; /* Smaller image size for a balanced look */
+  height: 80px;
   margin-bottom: 10px;
 }
 
 .upgrade p {
   font-weight: bold;
-  color: #333;
-  margin-top: 10px;
+  color: #000; /* Dark text color for contrast */
+  font-size: 14px; /* Slightly smaller font size */
+  text-transform: uppercase; /* Capitalize text */
 }
+
+
+
+
+
+
 
 /* Reviews Section */
 .reviews {
-  margin-top: 40px;
+  margin-top: -400px;
+  padding-top: -450px;
+  width: 100;
 }
 
 .reviews h3 {
   font-size: 28px;
   margin-bottom: 20px;
-  text-align: center;
+  text-align: right;
 }
 
 .review {
   margin-bottom: 10px;
-  font-style: italic;
   font-size: 16px;
+  text-align: right;
+}
+
+.review p{
+  ma
 }
 
 /* Footer Styling */
@@ -336,4 +363,13 @@ footer p {
   text-decoration: none;
   margin-right: -200px;
 }
+
+
+
+
+
+
+
+
+
 
