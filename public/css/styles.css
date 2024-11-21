@@ -105,6 +105,7 @@ main {
   box-shadow: none; 
   border-radius: 8px;
   position: relative; 
+  width: 1000;
 }
 
 main .content {
@@ -207,7 +208,7 @@ main .content {
   flex-direction: column;
   align-items: center;
   justify-content: center; /* Center content vertically and horizontally */
-width: 150px;
+width: 350px;
 }
 
 .upgrade img {
@@ -225,15 +226,12 @@ width: 150px;
 
 
 
-
-
-
-
 /* Reviews Section */
 .reviews {
-  margin-top: -400px;
+  margin-top: -350px;
   padding-top: -450px;
-  width: 100;
+  width: 1100px;
+
 }
 
 .reviews h3 {
@@ -248,9 +246,13 @@ width: 150px;
   text-align: right;
 }
 
-.review p{
-  ma
+.reviews .review p {
+  margin-left: 20px; /* Indent the bullet points */
+  font-size: 16px;
+  margin-bottom: 25px; /* Adds space between paragraphs */
+  padding-left: 10px; /* Optional: Adds some padding inside the paragraph for better spacing */
 }
+
 
 /* Footer Styling */
 footer {
@@ -265,60 +267,6 @@ footer p {
   font-size: 14px;
   margin: 0;
 }
-
-/* Media Queries for Mobile Devices */
-@media screen and (max-width: 768px) {
-  /* Header Styles for Mobile */
-  #top-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .siteName a {
-    font-size: 20px;
-  }
-
-  #tools {
-    margin-top: 10px;
-  }
-
-  /* Navigation Styles for Mobile */
-  nav ul {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  nav ul li {
-    margin-bottom: 10px;
-    margin-right: 0;
-  }
-
-  nav ul li a {
-    font-size: 18px;
-    padding: 12px 24px;
-  }
-
-  /* Main Content Adjustments for Mobile */
-  .intro h2 {
-    font-size: 28px;
-  }
-
-  .intro ul li {
-    font-size: 14px;
-  }
-
-  .upgrade-items {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-
-  .intro .button {
-    padding: 12px 24px;
-    font-size: 18px;
-  }
-}
-
-
-
 
 
 /* Adjust the positioning of the car image and the box */
@@ -363,13 +311,4 @@ footer p {
   text-decoration: none;
   margin-right: -200px;
 }
-
-
-
-
-
-
-
-
-
 
