@@ -190,37 +190,37 @@ main .content {
 }
 
 .upgrade-items {
-  display: grid; /* Using grid layout */
-  grid-template-columns: repeat(2, 1fr); /* 2 equal-width columns */
-  grid-template-rows: repeat(2, 1fr); /* 2 equal-height rows */
-  gap: 20px; /* Equal gap between both rows and columns */
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  grid-template-rows: repeat(2, 1fr); 
+  gap: 20px; 
   width: 50px;
 }
 
 .upgrade {
   text-align: center;
-  background-color: #00bcd4; /* Light cyan background */
+  background-color: #00bcd4; 
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow around each item */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center content vertically and horizontally */
+  justify-content: center; 
 width: 350px;
 }
 
 .upgrade img {
-  width: 80px; /* Smaller image size for a balanced look */
+  width: 80px; 
   height: 80px;
   margin-bottom: 10px;
 }
 
 .upgrade p {
   font-weight: bold;
-  color: #000; /* Dark text color for contrast */
-  font-size: 14px; /* Slightly smaller font size */
-  text-transform: uppercase; /* Capitalize text */
+  color: #000; 
+  font-size: 14px; 
+  text-transform: uppercase; 
 }
 
 
@@ -245,10 +245,10 @@ width: 350px;
 }
 
 .reviews .review p {
-  margin-left: 20px; /* Indent the bullet points */
+  margin-left: 20px; 
   font-size: 16px;
-  margin-bottom: 25px; /* Adds space between paragraphs */
-  padding-left: 10px; /* Optional: Adds some padding inside the paragraph for better spacing */
+  margin-bottom: 25px; 
+  padding-left: 10px; 
 }
 
 
@@ -267,22 +267,22 @@ footer p {
 }
 
 
-/* Adjust the positioning of the car image and the box */
+
 .car-image {
-  position: relative; /* Ensure the box can be positioned absolutely relative to this container */
+  position: relative; 
 }
 
 .box {
-  position: absolute; /* Position the box over the image */
-  background-color: rgba(255, 255, 255, 0.7); /* White with transparency */
+  position: absolute; 
+  background-color: rgba(255, 255, 255, 0.7); 
   padding: 20px;
-  width: 35%; /* Ensure the box takes full width of the image */
+  width: 35%; 
 }
 
 .box p {
   font-size: 20px;
   font-weight: bold;
-  color: #000; /* Black text for better contrast */
+  color: #000; 
   margin-right: -200px;
 }
 
