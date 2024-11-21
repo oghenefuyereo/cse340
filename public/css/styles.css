@@ -105,7 +105,7 @@ main {
   box-shadow: none; 
   border-radius: 8px;
   position: relative; 
-  width: 1000;
+  width: 1000px;
 }
 
 main .content {
