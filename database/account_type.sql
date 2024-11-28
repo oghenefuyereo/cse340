@@ -30,7 +30,6 @@ VALUES ('Custom'),
     ('SUV'),
     ('Truck'),
     ('Sedan');
-
 -- Data for table `inventory`
 INSERT INTO public.inventory (
         inv_make,
