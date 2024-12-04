@@ -50,3 +50,8 @@ app.listen(port, () => {
 app.get("/", function (req, res) {
   res.render("index", { title: "Home" });
 });
+
+const baseController = require("./controllers/baseController");
+
+// Index route
+app.get("/", baseController.buildHome);
