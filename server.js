@@ -10,6 +10,7 @@ const express = require("express");
 require("dotenv").config();
 const app = express();
 const staticRoutes = require("./routes/static"); // Renamed to clarify it serves static files
+const inventoryRoute = require("./routes/inventoryRoute"); // Added inventory route
 const expressLayouts = require("express-ejs-layouts");
 
 /* ***********************
@@ -32,6 +33,12 @@ app.use("/images", express.static(__dirname + "/public/images"));
  *************************/
 app.use(staticRoutes); // Corrected: Ensure we use the right variable for static routes
 
+// Inventory routes
+app.use("/inv", inventoryRoute); // Added inventory routes
+
+const baseController = require("./controllers/baseController");
+app.get("/", baseController.buildHome);
+
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
@@ -45,13 +52,3 @@ const host = process.env.HOST || "localhost"; // Default to localhost if HOST is
 app.listen(port, () => {
   console.log(`App listening on http://${host}:${port}`);
 });
-
-// Index route
-app.get("/", function (req, res) {
-  res.render("index", { title: "Home" });
-});
-
-const baseController = require("./controllers/baseController");
-
-// Index route
-app.get("/", baseController.buildHome);
