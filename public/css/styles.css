@@ -98,7 +98,7 @@ nav ul li a:active {
 }
 
 /* Main Content Styling */
-main {
+body {
   margin: 40px;
   padding: 20px;
   background-image: url(../images/site/checkerboard.jpg); 
@@ -107,7 +107,7 @@ main {
   position: relative; 
 }
 
-main .content {
+main {
   background-color: #fff; 
   padding: 20px;
   border-radius: 8px; 
