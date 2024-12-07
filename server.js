@@ -57,8 +57,8 @@ app.use(async (err, req, res, next) => {
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT || 5500; // Default to 5500 if PORT is not provided
-const host = process.env.HOST || "localhost"; // Default to localhost if HOST is undefined
+const port = process.env.PORT 
+const host = process.env.HOST 
 
 /* ***********************
  * Log statement to confirm server operation
