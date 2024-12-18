@@ -4,45 +4,48 @@ const Util = {};
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications();
-  let list = "<ul>";
-  list += '<li><a href="/" title="Home page">Home</a></li>';
-  data.rows.forEach((row) => {
-    list += "<li>";
-    list +=
-      '<a href="/inv/type/' +
-      row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
-      row.classification_name +
-      "</a>";
-    list += "</li>";
-  });
-  list += "</ul>";
-  return list;
+Util.getNav = async function () {
+  try {
+    let data = await invModel.getClassifications();
+    let list = "<ul>";
+    list += '<li><a href="/" title="Home page">Home</a></li>';
+    data.rows.forEach((row) => {
+      list += "<li>";
+      list +=
+        '<a href="/inv/type/' +
+        row.classification_id +
+        '" title="See our inventory of ' +
+        row.classification_name +
+        ' vehicles">' +
+        row.classification_name +
+        "</a>";
+      list += "</li>";
+    });
+    list += "</ul>";
+    return list;
+  } catch (error) {
+    console.error("Error constructing navigation:", error);
+    throw error; // Ensure the calling function can handle the error
+  }
 };
-
-module.exports = Util;
 
 /* **************************************
  * Build the classification view HTML
  * ************************************ */
-Util.buildClassificationGrid = async function (data) {
-  let grid;
-  if (data.length > 0) {
+Util.buildClassificationGrid = function (data) {
+  let grid = ""; // Initialize grid to avoid undefined variable errors
+  if (data && data.length > 0) {
     grid = '<ul id="inv-display">';
     data.forEach((vehicle) => {
       grid += "<li>";
       grid +=
-        '<a href="../../inv/detail/' +
+        '<a href="/inv/detail/' +
         vehicle.inv_id +
         '" title="View ' +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
-        'details"><img src="' +
+        ' details"><img src="' +
         vehicle.inv_thumbnail +
         '" alt="Image of ' +
         vehicle.inv_make +
@@ -53,7 +56,7 @@ Util.buildClassificationGrid = async function (data) {
       grid += "<hr />";
       grid += "<h2>";
       grid +=
-        '<a href="../../inv/detail/' +
+        '<a href="/inv/detail/' +
         vehicle.inv_id +
         '" title="View ' +
         vehicle.inv_make +
@@ -74,7 +77,29 @@ Util.buildClassificationGrid = async function (data) {
     });
     grid += "</ul>";
   } else {
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>';
+    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>';
   }
   return grid;
 };
+
+/* **************************************
+ * Utility functions for formatting
+ * ************************************ */
+Util.formatCurrency = function (amount) {
+  return `$${amount.toLocaleString()}`; // Formats as USD with commas
+};
+
+Util.formatMileage = function (mileage) {
+  return mileage.toLocaleString(); // Formats mileage with commas
+};
+
+// Export the Util object containing all utility functions
+module.exports = Util;
+
+/* ****************************************
+ * Middleware For Handling Errors
+ * Wrap other function in this for 
+ * General Error Handling
+ **************************************** */
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+

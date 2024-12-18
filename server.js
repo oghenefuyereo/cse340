@@ -6,6 +6,7 @@
 /* ***********************
  * Require Statements
  *************************/
+const utilities = require("./utilities");
 const express = require("express");
 require("dotenv").config();
 const app = express();
@@ -57,8 +58,8 @@ app.use(async (err, req, res, next) => {
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT 
-const host = process.env.HOST 
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 /* ***********************
  * Log statement to confirm server operation
@@ -67,4 +68,37 @@ app.listen(port, () => {
   console.log(`App listening on http://${host}:${port}`);
 });
 
+// Error handler function
+function errorHandler(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).render("error", { message: "Something went wrong!" });
+}
 
+app.use(errorHandler); // Apply error handler middleware after all routes
+
+/* ***********************
+ * Express Error Handler
+ * Place after all other middleware
+ *************************/
+app.use(async (err, req, res, next) => {
+  let nav = await utilities.getNav();
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  if (err.status == 404) {
+    message = err.message;
+  } else {
+    message = "Oh no! There was a crash. Maybe try a different route?";
+  }
+  res.render("errors/error", {
+    title: err.status || "Server Error",
+    message,
+    nav,
+  });
+});
+
+// File Not Found Route - must be last route in list
+app.use(async (req, res, next) => {
+  next({ status: 404, message: "Sorry, we appear to have lost that page." });
+});
+
+// Index route
+app.get("/", utilities.handleErrors(baseController.buildHome));

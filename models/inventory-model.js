@@ -28,5 +28,14 @@ async function getInventoryByClassificationId(classification_id) {
   }
 }
 
-module.exports = { getClassifications };
-module.exports = { getClassifications, getInventoryByClassificationId };
+module.exports = {
+  getClassifications,
+  getInventoryByClassificationId,
+  getVehicleById,
+};
+
+async function getVehicleById(id) {
+  const query = "SELECT * FROM public.inventory WHERE inv_id = $1";
+  const result = await pool.query(query, [id]); // Parameterized query to avoid SQL injection
+  return result.rows[0]; // Assuming the result is an array and we need the first object
+}
