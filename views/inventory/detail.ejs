@@ -1,21 +1,13 @@
 <section class="vehicle-details">
-    <div class="vehicle-image">
-        <img src="<%= vehicle.image_full %>" alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>">
-    </div>
-    <div class="vehicle-info">
-        <h1>
-            <%= vehicle.inv_year %>
-                <%= vehicle.inv_make %>
-                    <%= vehicle.inv_model %>
-        </h1>
-        <p><strong>Price:</strong>
-            <%= formatCurrency(vehicle.inv_price) %>
-        </p>
-        <p><strong>Mileage:</strong>
-            <%= formatMileage(vehicle.inv_mileage) %> miles
-        </p>
-        <p><strong>Description:</strong>
-            <%= vehicle.inv_description %>
-        </p>
-    </div>
+  <div class="vehicle-image">
+    <img src="<%= vehicle.image_full %>" alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+  </div>
+  <div class="vehicle-info">
+    <h1>
+      <%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>
+    </h1>
+    <p><strong>Price:</strong> <%= formatCurrency(vehicle.inv_price) %></p>
+    <p><strong>Mileage:</strong> <%= formatMileage(vehicle.inv_mileage) %> miles</p>
+    <p><strong>Description:</strong> <%= vehicle.inv_description %></p>
+  </div>
 </section>
