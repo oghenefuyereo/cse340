@@ -23,7 +23,6 @@ invCont.buildByClassificationId = async function (req, res, next) {
   }
 };
 invCont.getVehicleDetails = async function (req, res, next) {
-  try {
     const vehicleId = req.params.invid;
     const vehicle = await invModel.getVehicleById(vehicleId); // Fetch the vehicle data
 
@@ -32,10 +31,6 @@ invCont.getVehicleDetails = async function (req, res, next) {
       title: `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model} Details`,
       vehicle: vehicle,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
 };
 
 module.exports = invCont;
