@@ -9,10 +9,28 @@
 const utilities = require("./utilities");
 const express = require("express");
 require("dotenv").config();
+const session = require("express-session");
+const pool = require("./database/");
 const app = express();
 const staticRoutes = require("./routes/static"); // Renamed to clarify it serves static files
 const inventoryRoute = require("./routes/inventoryRoute"); // Added inventory route
 const expressLayouts = require("express-ejs-layouts");
+
+/* ***********************
+ * Middleware
+ * ************************/
+app.use(
+  session({
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  })
+);
 
 /* ***********************
  * View Engine and Templates
@@ -20,6 +38,13 @@ const expressLayouts = require("express-ejs-layouts");
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout"); // Not at views root
+
+// Express Messages Middleware
+app.use(require("connect-flash")());
+app.use(function (req, res, next) {
+  res.locals.messages = require("express-messages")(req, res);
+  next();
+});
 
 /* ***********************
  * Middleware for Static Files
@@ -38,20 +63,10 @@ app.use(staticRoutes); // Corrected: Ensure we use the right variable for static
 app.use("/inv", inventoryRoute); // Added inventory routes
 
 const baseController = require("./controllers/baseController");
-app.get("/", baseController.buildHome);
-
-/* ***********************
- * Express Error Handler
- * Place after all other middleware
- *************************/
-app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  res.render("errors/error", {
-    title: err.status || "Server Error",
-    message: err.message,
-    nav,
-  });
+app.get("/", utilities.handleErrors(baseController.buildHome));
+// File Not Found Route - must be last route in list
+app.use(async (req, res, next) => {
+  next({ status: 404, message: "Sorry, we appear to have lost that page." });
 });
 
 /* ***********************
@@ -60,21 +75,6 @@ app.use(async (err, req, res, next) => {
  *************************/
 const port = process.env.PORT;
 const host = process.env.HOST;
-
-/* ***********************
- * Log statement to confirm server operation
- *************************/
-app.listen(port, () => {
-  console.log(`App listening on http://${host}:${port}`);
-});
-
-// Error handler function
-function errorHandler(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).render("error", { message: "Something went wrong!" });
-}
-
-app.use(errorHandler); // Apply error handler middleware after all routes
 
 /* ***********************
  * Express Error Handler
@@ -95,12 +95,9 @@ app.use(async (err, req, res, next) => {
   });
 });
 
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
-})
-
-// Index route
-app.get("/", utilities.handleErrors(baseController.buildHome));
-
-
+/* ***********************
+ * Log statement to confirm server operation
+ *************************/
+app.listen(port, () => {
+  console.log(`App listening on http://${host}:${port}`);
+});

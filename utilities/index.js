@@ -93,8 +93,6 @@ Util.formatMileage = function (mileage) {
   return mileage.toLocaleString(); // Formats mileage with commas
 };
 
-// Export the Util object containing all utility functions
-module.exports = Util;
 
 /* ****************************************
  * Middleware For Handling Errors
@@ -103,3 +101,5 @@ module.exports = Util;
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+// Export the Util object containing all utility functions
+module.exports = Util;
