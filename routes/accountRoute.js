@@ -4,6 +4,16 @@ const router = new express.Router();
 const utilities = require("../utilities/");
 const accountController = require("../controllers/accountController");
 const regValidate = require("../utilities/account.validation");
+const { check, validationResult } = require("express-validator");
+
+// Process the login request
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+);
+
 // Process the registration data
 router.post(
   "/register",
@@ -16,14 +26,6 @@ router.post(
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
 
 router.post("/login", utilities.handleErrors(accountController.buildLogin));
-
-// Process the login request
-router.post(
-  "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-);
 
 // Route to build registration view
 router.get(
