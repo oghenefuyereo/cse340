@@ -1,4 +1,4 @@
-const invModel = require("../models/inventory-model");
+const invModel = require("../models/inventoryModel");
 const utilities = require("../utilities/");
 
 const invCont = {};
@@ -33,6 +33,31 @@ invCont.getVehicleDetails = async function (req, res, next) {
     nav,
     utilities,
   });
+};
+
+const inventoryModel = require('../models/inventoryModel');
+
+exports.renderAddClassificationView = (req, res) => {
+    const message = req.flash('info'); // Flash message
+    res.render('inventory/add-classification', { message });
+};
+
+exports.addClassification = async (req, res) => {
+    try {
+        const { classification_name } = req.body;
+        // Server-side validation
+        if (!/^[a-zA-Z0-9_-]+$/.test(classification_name)) {
+            req.flash('info', 'Invalid classification name.');
+            return res.redirect('/inv/add-classification');
+        }
+
+        await inventoryModel.addClassification(classification_name);
+        req.flash('info', 'Classification added successfully!');
+        res.redirect('/inv/');
+    } catch (error) {
+        req.flash('info', 'Error adding classification.');
+        res.redirect('/inv/add-classification');
+    }
 };
 
 module.exports = invCont;

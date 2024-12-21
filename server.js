@@ -6,11 +6,13 @@
 /* ***********************
  * Require Statements
  *************************/
-const utilities = require("./utilities");
+const utilities = require("./utilities/");
 const express = require("express");
 require("dotenv").config();
 const session = require("express-session");
 const pool = require("./database/");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const app = express();
 const staticRoutes = require("./routes/static"); // Renamed to clarify it serves static files
 const inventoryRoute = require("./routes/inventoryRoute"); // Added inventory route
@@ -32,19 +34,24 @@ app.use(
   })
 );
 
-/* ***********************
- * View Engine and Templates
- *************************/
-app.set("view engine", "ejs");
-app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // Not at views root
-
 // Express Messages Middleware
 app.use(require("connect-flash")());
 app.use(function (req, res, next) {
   res.locals.messages = require("express-messages")(req, res);
   next();
 });
+
+// Process Registration
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cookieParser());
+app.use(utilities.checkJWTToken);
+/* ***********************
+ * View Engine and Templates
+ *************************/
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout"); // Not at views root
 
 /* ***********************
  * Middleware for Static Files
@@ -53,7 +60,7 @@ app.use(express.static("public")); // This serves static files from the "public"
 app.use("/css", express.static(__dirname + "/public/css"));
 app.use("/js", express.static(__dirname + "/public/js"));
 app.use("/images", express.static(__dirname + "/public/images"));
-
+app.use(utilities.checkJWTToken);
 /* ***********************
  * Routes
  *************************/
@@ -61,7 +68,7 @@ app.use(staticRoutes); // Corrected: Ensure we use the right variable for static
 
 // Inventory routes
 app.use("/inv", inventoryRoute); // Added inventory routes
-
+app.use("/account", require("./routes/accountRoute"));
 const baseController = require("./controllers/baseController");
 app.get("/", utilities.handleErrors(baseController.buildHome));
 // File Not Found Route - must be last route in list
