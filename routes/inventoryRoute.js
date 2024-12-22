@@ -8,9 +8,24 @@ router.get(
   utilities.handleErrors(invController.renderManagementView)
 );
 router.get(
+  "inv/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
+router.get(
   "/add-classification",
   utilities.handleErrors(invController.renderAddClassificationView)
 );
+
+// Route to handle inventory update
+router.post("/update/", invController.updateInventory);
+
+// Error handling
+router.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
+
 router.post(
   "/add-inventory",
   utilities.handleErrors(async (req, res) => {
@@ -145,20 +160,4 @@ router.post(
     try {
       const newVehicle = await inventoryModel.addVehicle({
         vehicle_name,
-        vehicle_price,
-        vehicle_year,
-        vehicle_mileage,
-        vehicle_color,
-        classification_id,
-      });
-      res.status(201).json({
-        message: "Vehicle added successfully",
-        vehicle: newVehicle,
-      });
-    } catch (error) {
-      res.status(500).send("Error adding vehicle.");
-    }
-  })
-);
-
-module.exports = router;
+        vehicle_pri
