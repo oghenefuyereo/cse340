@@ -28,11 +28,7 @@ async function getInventoryByClassificationId(classification_id) {
   }
 }
 
-module.exports = {
-  getClassifications,
-  getInventoryByClassificationId,
-  getVehicleById,
-};
+
 
 async function getVehicleById(id) {
   const query = "SELECT * FROM public.inventory WHERE inv_id = $1";
@@ -193,3 +189,4 @@ module.exports = {
   addClassification,
   addVehicle,
 };
+

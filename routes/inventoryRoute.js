@@ -69,6 +69,11 @@ router.get(
   })
 );
 
+router.get(
+  "/getInventory/:classification_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.getInventoryJSON)
+);
 // Route to add a new classification
 router.post(
   "/classifications",
