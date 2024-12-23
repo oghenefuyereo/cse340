@@ -1,68 +1,53 @@
-// Needed Resources
 const express = require("express");
 const router = new express.Router();
-const utilities = require("../utilities/");
+const utilities = require("../utilities");
 const accountController = require("../controllers/accountController");
 const { check, validationResult } = require("express-validator");
 const regValidate = require("../utilities/account.validation");
-console.log("regValidate contents:", regValidate);
 
-// Process the login request
+// Route to handle login (POST request)
 router.post(
   "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
+  regValidate.loginRules(), // Ensure login data is validated
+  regValidate.checkLoginData, // Check for any validation errors
+  utilities.handleErrors(accountController.accountLogin) // Handle errors and invoke login function
 );
 
-// Process the registration data
+// Route to process registration (POST request)
 router.post(
   "/register",
-  regValidate.registationRules(),
-  regValidate.checkRegData,
-  utilities.handleErrors(accountController.registerAccount)
+  regValidate.registrationRules(), // Ensure registration data is validated
+  regValidate.checkRegData, // Check registration data and return errors or continue
+  utilities.handleErrors(accountController.registerAccount) // Handle errors and invoke registration function
 );
-router.post("/login", utilities.handleErrors(accountController.buildLogin));
-// Route to build login view
-router.get("/login", utilities.handleErrors(accountController.buildLogin));
 
-// Route to handle logout
+// Route to handle logout (GET request)
 router.get("/logout", (req, res) => {
-  // Clears the JWT cookie from the client's browser
-  res.clearCookie("jwt");
-
-  // Redirects the user to the homepage or login page after logging out
-  res.redirect("/");
+  res.clearCookie("jwt"); // Clear the JWT cookie on logout
+  res.redirect("/"); // Redirect to the home page after logging out
 });
 
-// Route to build registration view
+// Route to show the login page (GET request)
+router.get("/login", utilities.handleErrors(accountController.buildLogin));
+
+// Route to show the registration page (GET request)
 router.get(
   "/register",
   utilities.handleErrors(accountController.buildRegister)
 );
 
-router.post(
-  "/register",
-  utilities.handleErrors(accountController.registerAccount)
-);
-
-router.get(
-  "/",
-  utilities.checkLogin,
-  utilities.handleErrors(accountController.buildManagement)
-);
-
-// Deliver the account update view
+// Route to update account info (GET request)
 router.get(
   "/update",
-  utilities.checkLogin, // Ensure the user is logged in
+  utilities.checkLogin, // Ensure user is logged in before updating
   utilities.handleErrors(accountController.buildAccountUpdateView)
 );
 
-// Process account updates (first name, last name, email)
+// Route to process account updates (POST request)
 router.post(
   "/update",
   [
+    // Validation checks for account info
     check("account_firstname")
       .notEmpty()
       .withMessage("First name is required."),
@@ -71,6 +56,7 @@ router.post(
       .isEmail()
       .withMessage("Valid email is required.")
       .custom(async (email, { req }) => {
+        // Custom validation to check if email already exists
         const accountModel = require("../models/accountModel");
         const account = await accountModel.getAccountByEmail(email);
         if (account && account.account_id !== req.body.account_id) {
@@ -78,14 +64,15 @@ router.post(
         }
       }),
   ],
-  utilities.handleValidationErrors,
-  utilities.handleErrors(accountController.updateAccount)
+  utilities.handleValidationErrors, // Handle validation errors if any
+  utilities.handleErrors(accountController.updateAccount) // Call update function and handle errors
 );
 
-// Process password change
+// Route to process password change (POST request)
 router.post(
   "/change-password",
   [
+    // Validation checks for password strength
     check("new_password")
       .isLength({ min: 8 })
       .withMessage("Password must be at least 8 characters long.")
@@ -96,22 +83,20 @@ router.post(
       .matches(/[0-9]/)
       .withMessage("Password must contain at least one number."),
   ],
-  utilities.handleValidationErrors,
-  utilities.handleErrors(accountController.changePassword)
+  utilities.handleValidationErrors, // Handle validation errors
+  utilities.handleErrors(accountController.changePassword) // Call password change function
 );
 
-// POST route to handle form submission
+// Route to process form submission (POST request) - example route
 router.post(
   "/submit",
   [
-    // Validation checks for email and password
     check("email").isEmail().withMessage("Please enter a valid email"),
     check("password").notEmpty().withMessage("Password cannot be empty"),
   ],
-  Util.handleValidationErrors, // Handle validation errors
+  utilities.handleValidationErrors, // Handle validation errors
   (req, res) => {
-    // If validation passed, handle the successful form submission
-    res.send("Validation passed!");
+    res.send("Validation passed!"); // Placeholder response on success
   }
 );
 

@@ -1,26 +1,35 @@
 /* ******************************************
- * This server.js file is the primary file of the
- * application. It is used to control the project.
+ * This server.js file is the primary file of
+ * the application. It is used to control the project.
  *******************************************/
 
 /* ***********************
  * Require Statements
  *************************/
-const utilities = require("./utilities/");
 const express = require("express");
-require("dotenv").config();
+const dotenv = require("dotenv");
 const session = require("express-session");
 const pool = require("./database/");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const app = express();
-const staticRoutes = require("./routes/static"); // Renamed to clarify it serves static files
-const inventoryRoute = require("./routes/inventoryRoute"); // Added inventory route
 const expressLayouts = require("express-ejs-layouts");
-const accountRoutes = require("./routes/accountRoutes"); // Import the account routes
+const connectFlash = require("connect-flash");
+
+const utilities = require("./utilities/");
+const staticRoutes = require("./routes/static");
+const inventoryRoute = require("./routes/inventoryRoute");
+const accountRoutes = require("./routes/accountRoutes"); // Ensure this file exists
+const baseController = require("./controllers/baseController");
+
+// Load environment variables
+dotenv.config();
+
+// Initialize the app
+const app = express();
+
 /* ***********************
  * Middleware
- * ************************/
+ ************************/
 app.use(
   session({
     store: new (require("connect-pg-simple")(session))({
@@ -31,58 +40,71 @@ app.use(
     resave: true,
     saveUninitialized: true,
     name: "sessionId",
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      httpOnly: true, // Prevent access to cookies via JavaScript
+      maxAge: 1000 * 60 * 60 * 24, // 1 day expiration
+    },
   })
 );
 
-app.use("/account", accountRoutes); // Use these routes for paths prefixed with "/account"
-// Express Messages Middleware
-app.use(require("connect-flash")());
-app.use(function (req, res, next) {
-  res.locals.messages = require("express-messages")(req, res);
+// Express Messages Middleware for flash messages
+app.use(connectFlash());
+app.use((req, res, next) => {
+  res.locals.messages = req.flash(); // Using req.flash directly for messages
   next();
 });
 
-// Process Registration
+// Body parser to handle form data
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded form data
 app.use(cookieParser());
-app.use(utilities.checkJWTToken);
+
+// JWT Token check only for relevant routes
+app.use("/account", utilities.checkJWTToken); // Apply middleware specifically for account routes
+
 /* ***********************
  * View Engine and Templates
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // Not at views root
+app.set("layout", "./layouts/layout"); // Layout file for EJS templates
 
 /* ***********************
  * Middleware for Static Files
  *************************/
-app.use(express.static("public")); // This serves static files from the "public" folder
+app.use(express.static("public")); // Serve static files from "public" folder
 app.use("/css", express.static(__dirname + "/public/css"));
 app.use("/js", express.static(__dirname + "/public/js"));
 app.use("/images", express.static(__dirname + "/public/images"));
-app.use(utilities.checkJWTToken);
+
 /* ***********************
  * Routes
  *************************/
-app.use(staticRoutes); // Corrected: Ensure we use the right variable for static routes
+app.use(staticRoutes); // Serve static routes
 
 // Inventory routes
-app.use("/inv", inventoryRoute); // Added inventory routes
-app.use("/account", require("./routes/accountRoute"));
-const baseController = require("./controllers/baseController");
+app.use("/inv", inventoryRoute); // Serve inventory-related routes
+
+// Account routes
+app.use("/account", accountRoutes); // Serve account-related routes
+
+// Base route (Home)
 app.get("/", utilities.handleErrors(baseController.buildHome));
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({ status: 404, message: "Sorry, we appear to have lost that page." });
+
+// Catch-all route for handling 404 errors (must be the last route)
+app.use((req, res, next) => {
+  const error = new Error("Not Found");
+  error.status = 404;
+  next(error);
 });
 
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
+const port = process.env.PORT || 5500; // Default to port 5500 if not provided in .env
+const host = process.env.HOST || "localhost"; // Default to localhost if not provided
 
 /* ***********************
  * Express Error Handler
@@ -90,13 +112,15 @@ const host = process.env.HOST;
  *************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if (err.status == 404) {
-    message = err.message;
-  } else {
-    message = "Oh no! There was a crash. Maybe try a different route?";
-  }
-  res.render("errors/error", {
+  console.error(
+    `Error occurred at ${req.originalUrl}: ${err.message}`,
+    err.stack
+  );
+  const message =
+    err.status === 404
+      ? err.message
+      : "An unexpected error occurred. Please try again later.";
+  res.status(err.status || 500).render("errors/error", {
     title: err.status || "Server Error",
     message,
     nav,
@@ -106,6 +130,21 @@ app.use(async (err, req, res, next) => {
 /* ***********************
  * Log statement to confirm server operation
  *************************/
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App listening on http://${host}:${port}`);
+});
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log(`Port ${port} is already in use, trying another port...`);
+    if (process.env.NODE_ENV === "development") {
+      server.close(() => {
+        app.listen(0, () => {
+          console.log(`App is now listening on a different port.`);
+        });
+      });
+    } else {
+      console.error(`Error: Port ${port} is in use. Please free up the port.`);
+    }
+  }
 });

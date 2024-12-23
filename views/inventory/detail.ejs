@@ -1,24 +1,40 @@
 <section class="vehicle-details">
+  <!-- Vehicle Image Section -->
   <div class="vehicle-image-section">
     <img src="<%= vehicle.inv_image %>" alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>"
       class="vehicle-image">
-    <p class="certification-banner">This vehicle has passed inspection by an ASE-certified technician.</p>
+    <p class="certification-banner">
+      This vehicle has passed inspection by an ASE-certified technician.
+    </p>
   </div>
+
+  <!-- Vehicle Info Section -->
   <div class="vehicle-info-section">
     <h1 class="vehicle-title">
       <%= vehicle.inv_year %>
         <%= vehicle.inv_make %>
           <%= vehicle.inv_model %>
     </h1>
-    <p class="vehicle-price"><strong>No-Haggle Price:</strong>
+
+    <!-- Price -->
+    <p class="vehicle-price">
+      <strong>No-Haggle Price:</strong>
       <%= utilities.formatCurrency(vehicle.inv_price) %>
     </p>
-    <p class="vehicle-mileage"><strong>Mileage:</strong>
+
+    <!-- Mileage -->
+    <p class="vehicle-mileage">
+      <strong>Mileage:</strong>
       <%= utilities.formatMileage(vehicle.inv_miles) %> miles
     </p>
-    <p class="vehicle-description"><strong>Description:</strong>
+
+    <!-- Description -->
+    <p class="vehicle-description">
+      <strong>Description:</strong>
       <%= vehicle.inv_description %>
     </p>
+
+    <!-- Action Buttons -->
     <div class="action-buttons">
       <button>Start My Purchase</button>
       <button>Contact Us</button>
