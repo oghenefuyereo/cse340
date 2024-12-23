@@ -1,4 +1,6 @@
 const pool = require("../database");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
 
 /* *****************************
  * Register new account
@@ -9,6 +11,14 @@ async function registerAccount(
   account_email,
   account_password
 ) {
+  // Validate email format
+  if (!validator.isEmail(account_email)) {
+    throw new Error("Invalid email format");
+  }
+
+  // Hash password
+  const hashedPassword = await bcrypt.hash(account_password, 10); // Salt rounds set to 10
+
   try {
     const sql =
       "INSERT INTO account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *";
@@ -16,7 +26,7 @@ async function registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      account_password,
+      hashedPassword,
     ]);
     return result.rows[0]; // Return the inserted row
   } catch (error) {
@@ -37,7 +47,10 @@ async function getAccountByEmail(account_email) {
     if (result.rows.length === 0) {
       throw new Error("No matching email found");
     }
-    return result.rows[0]; // Return the first matching account
+    const account = result.rows[0];
+    // Exclude password from returned data
+    delete account.account_password;
+    return account;
   } catch (error) {
     console.error("Error fetching account by email:", error.message);
     throw error; // Re-throw the error to be handled by the caller
@@ -56,7 +69,10 @@ async function getAccountById(account_id) {
     if (result.rows.length === 0) {
       throw new Error("No matching account found");
     }
-    return result.rows[0]; // Return the first matching account
+    const account = result.rows[0];
+    // Exclude password from returned data
+    delete account.account_password;
+    return account;
   } catch (error) {
     console.error("Error fetching account by ID:", error.message);
     throw error; // Re-throw the error to be handled by the caller
@@ -72,6 +88,11 @@ async function updateAccount({
   account_lastname,
   account_email,
 }) {
+  // Validate email format
+  if (!validator.isEmail(account_email)) {
+    throw new Error("Invalid email format");
+  }
+
   try {
     const sql =
       "UPDATE account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4 RETURNING *";
@@ -94,15 +115,18 @@ async function updateAccount({
 /* *****************************
  * Update account password
  * ***************************** */
-async function updatePassword(account_id, account_password) {
+async function updatePassword(account_id, new_password) {
+  // Hash new password
+  const hashedPassword = await bcrypt.hash(new_password, 10); // Salt rounds set to 10
+
   try {
     const sql =
       "UPDATE account SET account_password = $1 WHERE account_id = $2 RETURNING *";
-    const result = await pool.query(sql, [account_password, account_id]);
+    const result = await pool.query(sql, [hashedPassword, account_id]);
     if (result.rowCount === 0) {
       throw new Error("Password update failed: No rows affected.");
     }
-    return result.rows[0]; // Return updated account
+    return result.rows[0]; // Return updated account (without password)
   } catch (error) {
     console.error("Error updating password:", error.message);
     throw new Error("Password update failed, please try again later.");

@@ -3,6 +3,7 @@ const accountModel = require("../models/accountModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+
 /* ****************************************
  *  Deliver login view
  * *************************************** */
@@ -48,7 +49,7 @@ async function registerAccount(req, res) {
   if (regResult) {
     req.flash(
       "notice",
-      `Congratulations, you\'re registered ${account_firstname}. Please log in.`
+      `Congratulations, you're registered ${account_firstname}. Please log in.`
     );
     res.status(201).render("account/login", {
       title: "Login",
@@ -65,11 +66,12 @@ async function registerAccount(req, res) {
 
 /* ****************************************
  *  Process login request
- * ************************************ */
+ * *************************************** */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
   const accountData = await accountModel.getAccountByEmail(account_email);
+
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.");
     res.status(400).render("account/login", {
@@ -80,6 +82,7 @@ async function accountLogin(req, res) {
     });
     return;
   }
+
   try {
     if (await bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password;
@@ -88,6 +91,7 @@ async function accountLogin(req, res) {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: 3600 * 1000 }
       );
+
       if (process.env.NODE_ENV === "development") {
         res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
       } else {
@@ -99,10 +103,7 @@ async function accountLogin(req, res) {
       }
       return res.redirect("/account/");
     } else {
-      req.flash(
-        "message notice",
-        "Please check your credentials and try again."
-      );
+      req.flash("notice", "Please check your credentials and try again.");
       res.status(400).render("account/login", {
         title: "Login",
         nav,
@@ -111,7 +112,8 @@ async function accountLogin(req, res) {
       });
     }
   } catch (error) {
-    throw new Error("Access Forbidden");
+    console.error(error);
+    res.status(403).send("Access Forbidden");
   }
 }
 
@@ -240,8 +242,8 @@ async function changePassword(req, res) {
       ...updatedAccountData,
     });
   } catch (err) {
-    console.error("Error updating password:", err);
-    req.flash("notice", "An error occurred during password update.");
+    console.error("Error changing password:", err);
+    req.flash("notice", "An error occurred during password change.");
     res.status(500).render("account/update", {
       title: "Update Account",
       nav,

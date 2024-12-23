@@ -1,17 +1,46 @@
-<% if (title){ %>
+<% if (title) { %>
     <h1>
-        <% title %>
+        <%= title %>
     </h1>
-    <% } else { res.redirect('/') } %>
-        <%- messages() %>
-            <main class="login-container">
-                <form class="login-form" action="/account/login" method="post">
-                    <h2>Login</h2>
-                    <label for="account_email">Email:</label>
-                    <input type="email" id="account_email" name="account_email" required>
-                    <label for="account_password">Password:</label>
-                    <input type="password" id="account_password" name="account_password" required>
-                    <button type="submit">Login</button>
-                    <p>No account? <a href="/account/register">Sign-up</a></p>
-                </form>
-            </main>
+    <% } %>
+
+        <!-- Display Flash Messages -->
+        <% if (messages && messages.error && messages.error.length> 0) { %>
+            <div class="error-messages">
+                <% messages.error.forEach(function(message) { %>
+                    <p>
+                        <%= message %>
+                    </p>
+                    <% }); %>
+            </div>
+            <% } %>
+
+                <% if (messages && messages.success && messages.success.length> 0) { %>
+                    <div class="success-messages">
+                        <% messages.success.forEach(function(message) { %>
+                            <p>
+                                <%= message %>
+                            </p>
+                            <% }); %>
+                    </div>
+                    <% } %>
+
+                        <main class="login-container">
+                            <form class="login-form" action="/account/login" method="post">
+                                <h2>Login</h2>
+
+                                <!-- Email input field -->
+                                <label for="account_email">Email:</label>
+                                <input type="email" id="account_email" name="account_email" required>
+
+                                <!-- Password input field -->
+                                <label for="account_password">Password:</label>
+                                <input type="password" id="account_password" name="account_password" required>
+
+                                <!-- Submit button -->
+                                <button type="submit">Login</button>
+
+                                <!-- Link to registration page -->
+                                <p>No account? <a href="/account/register">Sign-up</a></p>
+                            </form>
+                        </main>

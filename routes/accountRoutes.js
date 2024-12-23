@@ -81,7 +81,10 @@ router.post(
       .matches(/[a-z]/)
       .withMessage("Password must contain at least one lowercase letter.")
       .matches(/[0-9]/)
-      .withMessage("Password must contain at least one number."),
+      .withMessage("Password must contain at least one number.")
+      .not()
+      .matches(/\s/)
+      .withMessage("Password cannot contain spaces."),
   ],
   utilities.handleValidationErrors, // Handle validation errors
   utilities.handleErrors(accountController.changePassword) // Call password change function

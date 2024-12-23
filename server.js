@@ -36,12 +36,12 @@ app.use(
       createTableIfMissing: true,
       pool,
     }),
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "default-secret", // Ensure a fallback secret
     resave: true,
     saveUninitialized: true,
     name: "sessionId",
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      secure: process.env.NODE_ENV === "production", // Ensure cookies are secure in production
       httpOnly: true, // Prevent access to cookies via JavaScript
       maxAge: 1000 * 60 * 60 * 24, // 1 day expiration
     },
@@ -146,5 +146,7 @@ server.on("error", (err) => {
     } else {
       console.error(`Error: Port ${port} is in use. Please free up the port.`);
     }
+  } else {
+    console.error("Error starting server:", err);
   }
 });
