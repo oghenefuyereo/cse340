@@ -17,7 +17,7 @@ const app = express();
 const staticRoutes = require("./routes/static"); // Renamed to clarify it serves static files
 const inventoryRoute = require("./routes/inventoryRoute"); // Added inventory route
 const expressLayouts = require("express-ejs-layouts");
-
+const accountRoutes = require("./routes/accountRoutes"); // Import the account routes
 /* ***********************
  * Middleware
  * ************************/
@@ -34,6 +34,7 @@ app.use(
   })
 );
 
+app.use("/account", accountRoutes); // Use these routes for paths prefixed with "/account"
 // Express Messages Middleware
 app.use(require("connect-flash")());
 app.use(function (req, res, next) {

@@ -1,0 +1,57 @@
+<h1>Update Account</h1>
+
+<% if (errors) { %>
+    <div class="error-messages">
+        <% errors.forEach(function (error) { %>
+            <p>
+                <%= error.msg %>
+            </p>
+            <% }); %>
+    </div>
+    <% } %>
+
+        <% if (message) { %>
+            <div class="flash-message">
+                <p>
+                    <%= message %>
+                </p>
+            </div>
+            <% } %>
+
+                <!-- Account Update Form -->
+                <form action="/account/update" method="POST" id="accountUpdateForm">
+                    <h2>Account Update</h2>
+
+                    <label for="account_firstname">First Name:</label>
+                    <input type="text" id="account_firstname" name="account_firstname" value="<%= account_firstname %>"
+                        required />
+
+                    <label for="account_lastname">Last Name:</label>
+                    <input type="text" id="account_lastname" name="account_lastname" value="<%= account_lastname %>"
+                        required />
+
+                    <label for="account_email">Email Address:</label>
+                    <input type="email" id="account_email" name="account_email" value="<%= account_email %>" required />
+
+                    <!-- Hidden account ID -->
+                    <input type="hidden" name="account_id" value="<%= account_id %>" />
+
+                    <button type="submit">Update Account</button>
+                </form>
+
+                <!-- Change Password Form -->
+                <form action="/account/change-password" method="POST" id="changePasswordForm">
+                    <h2>Change Password</h2>
+                    <p>
+                        Enter a new password to change your current one. Passwords must be at least 8 characters long
+                        and include at least one uppercase letter, one lowercase letter, and one number.
+                    </p>
+
+                    <label for="new_password">New Password:</label>
+                    <input type="password" id="new_password" name="new_password" minlength="8" required />
+
+                    <!-- Hidden account ID -->
+                    <input type="hidden" name="account_id" value="<%= account_id %>" />
+
+                    <button type="submit">Change Password</button>
+                </form>

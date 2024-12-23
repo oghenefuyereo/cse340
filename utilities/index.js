@@ -2,6 +2,7 @@ const invModel = require("../models/inventoryModel");
 const Util = {};
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const { validationResult } = require("express-validator");
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -132,12 +133,25 @@ Util.checkJWTToken = (req, res, next) => {
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
-    next()
+    next();
   } else {
-    req.flash("notice", "Please log in.")
-    return res.redirect("/account/login")
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
   }
- }
+};
+
+/* ****************************************
+ * Middleware to handle validation errors
+ **************************************** */
+Util.handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMessages = errors.array().map((err) => err.msg);
+    req.flash("errors", errorMessages);
+    return res.redirect("back");
+  }
+  next();
+};
 
 // Export the Util object containing all utility functions
 module.exports = Util;

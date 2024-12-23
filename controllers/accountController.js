@@ -1,6 +1,6 @@
 const utilities = require("../utilities");
 const accountModel = require("../models/accountModel");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 /* ****************************************
@@ -115,4 +115,149 @@ async function accountLogin(req, res) {
   }
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin };
+/* ****************************************
+ *  Render Management View
+ * *************************************** */
+async function buildManagement(req, res) {
+  let nav = await utilities.getNav();
+  const user = req.user; // Assuming user info is stored in req.user (from JWT or session)
+
+  if (!user) {
+    return res.redirect("/login"); // Redirect to login if user is not logged in
+  }
+
+  const {
+    account_firstname: firstName,
+    account_type: accountType,
+    account_id: userId,
+  } = user;
+
+  try {
+    res.render("manageInventory", {
+      title: "Manage Inventory",
+      nav,
+      firstName,
+      accountType,
+      userId,
+      isLoggedIn: true,
+      message: req.flash("message"),
+      classificationSelect: await utilities.getClassificationSelectOptions(), // Fetch options
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error rendering management view.");
+  }
+}
+
+/* ****************************************
+ *  Deliver Account Update View
+ * *************************************** */
+async function buildAccountUpdateView(req, res, next) {
+  let nav = await utilities.getNav();
+  const accountId = req.user.account_id; // Assuming `req.user` contains logged-in user data
+
+  try {
+    const accountData = await accountModel.getAccountById(accountId);
+    res.render("account/update", {
+      title: "Update Account",
+      nav,
+      errors: null,
+      message: req.flash("notice"),
+      ...accountData,
+    });
+  } catch (err) {
+    console.error("Error fetching account data:", err);
+    next(err);
+  }
+}
+
+/* ****************************************
+ *  Process Account Update
+ * *************************************** */
+async function updateAccount(req, res) {
+  let nav = await utilities.getNav();
+  const { account_firstname, account_lastname, account_email, account_id } =
+    req.body;
+
+  try {
+    const updateResult = await accountModel.updateAccount({
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+    });
+
+    if (updateResult) {
+      req.flash("notice", "Account updated successfully.");
+    } else {
+      req.flash("notice", "Account update failed.");
+    }
+
+    const updatedAccountData = await accountModel.getAccountById(account_id);
+    res.render("account/manage", {
+      title: "Account Management",
+      nav,
+      message: req.flash("notice"),
+      ...updatedAccountData,
+    });
+  } catch (err) {
+    console.error("Error updating account:", err);
+    req.flash("notice", "An error occurred during account update.");
+    res.status(500).render("account/update", {
+      title: "Update Account",
+      nav,
+      errors: null,
+      ...req.body, // Preserve the form data for user correction
+    });
+  }
+}
+
+/* ****************************************
+ *  Process Password Change
+ * *************************************** */
+async function changePassword(req, res) {
+  let nav = await utilities.getNav();
+  const { new_password, account_id } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    const updateResult = await accountModel.updatePassword(
+      account_id,
+      hashedPassword
+    );
+
+    if (updateResult) {
+      req.flash("notice", "Password updated successfully.");
+    } else {
+      req.flash("notice", "Password update failed.");
+    }
+
+    const updatedAccountData = await accountModel.getAccountById(account_id);
+    res.render("account/manage", {
+      title: "Account Management",
+      nav,
+      message: req.flash("notice"),
+      ...updatedAccountData,
+    });
+  } catch (err) {
+    console.error("Error updating password:", err);
+    req.flash("notice", "An error occurred during password update.");
+    res.status(500).render("account/update", {
+      title: "Update Account",
+      nav,
+      errors: null,
+      ...req.body, // Preserve the form data for user correction
+    });
+  }
+}
+
+module.exports = {
+  buildLogin,
+  buildRegister,
+  registerAccount,
+  accountLogin,
+  buildManagement,
+  buildAccountUpdateView,
+  updateAccount,
+  changePassword,
+};

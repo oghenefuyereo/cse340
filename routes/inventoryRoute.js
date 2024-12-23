@@ -160,4 +160,85 @@ router.post(
     try {
       const newVehicle = await inventoryModel.addVehicle({
         vehicle_name,
-        vehicle_pri
+        vehicle_price,
+        vehicle_year,
+        vehicle_mileage,
+        vehicle_color,
+        classification_id,
+      });
+      res.status(201).json({
+        message: "Vehicle added successfully",
+        vehicle: newVehicle,
+      });
+    } catch (error) {
+      res.status(500).send("Error adding vehicle.");
+    }
+  })
+);
+
+// Middleware to check if the account is Employee or Admin
+const checkAdminOrEmployee = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.redirect("/login"); // Redirect to login if no token is found
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (
+      err ||
+      !(decoded.account_type === "Employee" || decoded.account_type === "Admin")
+    ) {
+      req.flash(
+        "error",
+        "You do not have the required permissions to access this page."
+      );
+      return res.redirect("/login"); // Redirect if not Employee or Admin
+    }
+    next(); // Proceed to the next middleware or route handler if authorized
+  });
+};
+
+// Use this middleware in routes that require Employee or Admin access
+router.get(
+  "/management",
+  checkAdminOrEmployee, // Only Admin or Employee can access management
+  utilities.handleErrors(invController.renderManagementView)
+);
+
+router.get(
+  "/add-classification",
+  checkAdminOrEmployee, // Only Admin or Employee can add classification
+  utilities.handleErrors(invController.renderAddClassificationView)
+);
+
+router.post(
+  "/update/",
+  checkAdminOrEmployee, // Only Admin or Employee can update inventory
+  invController.updateInventory
+);
+
+router.post(
+  "/add-inventory",
+  checkAdminOrEmployee, // Only Admin or Employee can add inventory
+  utilities.handleErrors(async (req, res) => {
+    // Add inventory logic here
+  })
+);
+
+router.post(
+  "/classifications",
+  checkAdminOrEmployee, // Only Admin or Employee can add classifications
+  utilities.handleErrors(async (req, res) => {
+    // Add classification logic here
+  })
+);
+
+router.post(
+  "/vehicles",
+  checkAdminOrEmployee, // Only Admin or Employee can add vehicles
+  utilities.handleErrors(async (req, res) => {
+    // Add vehicle logic here
+  })
+);
+
+module.exports = router;

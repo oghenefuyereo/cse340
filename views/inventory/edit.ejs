@@ -6,4 +6,10 @@
     <label for="inv_model">Model:</label>
     <input type="text" id="inv_model" name="inv_model" value="<%= inv_model || '' %>" required>
 
-    <button type="submit" disabled>Update Vehicl
+    <button type="submit" disabled>Update Vehicle</button>
+
+    <input type="hidden" name="inv_id" <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+        <% } %>>
+</form>
+
+<script src="/js/inventory.js"></script>

@@ -6,15 +6,38 @@
     </div>
     <% } %>
 
-        <ul>
-            <li><a href="/inv/add-classification">Add New Classification</a></li>
-            <li><a href="/inv/add-inventory">Add New Inventory</a></li>
-        </ul>
+        <!-- Greet the user based on account type -->
+        <% if (isLoggedIn) { %>
+            <h2>Welcome <%= firstName %>
+            </h2> <!-- Display first name of the user -->
 
-        <h2>Manage Inventory</h2>
-        <p>Choose a Classification to see those inventory items.</p>
-        <% classificationSelect %>
+            <% if (accountType==='Employee' || accountType==='Admin' ) { %>
+                <!-- Only render Inventory Management section for Employee/Admin -->
+                <h3>Inventory Management</h3>
+                <p><a href="/inv/management">Go to Inventory Management</a></p> <!-- Link to Inventory Management -->
+                <% } %>
 
-            <table id="inventoryDisplay"></table>
-            <noscript>JavaScript must be enabled to use this page.</noscript>
-            <script src="../../js/inventory.js"></script>
+                    <!-- Link for updating account information (visible for all Clients) -->
+                    <p><a href="/account/update/<%= userId %>">Update Account Information</a></p>
+                    <!-- Link to update account -->
+
+                    <% } else { %>
+                        <!-- Redirect or show a message if the user is not logged in -->
+                        <p>Please log in to manage your account.</p>
+                        <% } %>
+
+                            <ul>
+                                <li><a href="/inv/add-classification">Add New Classification</a></li>
+                                <li><a href="/inv/add-inventory">Add New Inventory</a></li>
+                            </ul>
+
+                            <h2>Manage Inventory</h2>
+                            <p>Choose a Classification to see those inventory items.</p>
+
+                            <%= classificationSelect %> <!-- Assuming this is passed from the controller -->
+
+                                <table id="inventoryDisplay"></table>
+
+                                <noscript>JavaScript must be enabled to use this page.</noscript>
+
+                                <script src="../../js/inventory.js"></script>
