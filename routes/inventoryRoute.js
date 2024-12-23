@@ -78,6 +78,30 @@ router.get(
   })
 );
 
+// Route to fetch inventory item details by ID (NEW)
+router.get(
+  "/detail/:id", // New route for fetching item details
+  utilities.handleErrors(async (req, res) => {
+    const itemId = req.params.id; // Get item ID from the URL
+
+    try {
+      // Fetch inventory item by ID
+      const inventoryItem = await inventoryModel.getInventoryById(itemId); // Make sure `getInventoryById` exists in your model
+
+      if (!inventoryItem) {
+        return res.status(404).send("Inventory item not found.");
+      }
+
+      // Render the inventory item detail page with the fetched data
+      res.render("inventoryDetail", { item: inventoryItem });
+    } catch (error) {
+      console.error("Error fetching inventory item details:", error);
+      req.flash("error", "Failed to fetch item details. Please try again.");
+      res.redirect("/inv/management");
+    }
+  })
+);
+
 // Add inventory item route
 router.post(
   "/add-inventory",

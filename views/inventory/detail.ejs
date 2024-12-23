@@ -34,12 +34,34 @@
       <%= vehicle.inv_description %>
     </p>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button>Start My Purchase</button>
-      <button>Contact Us</button>
-      <button>Schedule Test Drive</button>
-      <button>Apply for Financing</button>
-    </div>
+    <!-- Vehicle Specifications (Optional) -->
+    <% if (vehicle.inv_engine) { %>
+      <p class="vehicle-spec">
+        <strong>Engine:</strong>
+        <%= vehicle.inv_engine %>
+      </p>
+      <% } %>
+
+        <% if (vehicle.inv_transmission) { %>
+          <p class="vehicle-spec">
+            <strong>Transmission:</strong>
+            <%= vehicle.inv_transmission %>
+          </p>
+          <% } %>
+
+            <% if (vehicle.inv_color) { %>
+              <p class="vehicle-spec">
+                <strong>Color:</strong>
+                <%= vehicle.inv_color %>
+              </p>
+              <% } %>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                  <button class="btn-action">Start My Purchase</button>
+                  <button class="btn-action">Contact Us</button>
+                  <button class="btn-action">Schedule Test Drive</button>
+                  <button class="btn-action">Apply for Financing</button>
+                </div>
   </div>
 </section>

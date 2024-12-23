@@ -16,6 +16,11 @@ async function registerAccount(
     throw new Error("Invalid email format");
   }
 
+  // Ensure password is strong enough
+  if (account_password.length < 6) {
+    throw new Error("Password must be at least 6 characters long.");
+  }
+
   // Hash password
   const hashedPassword = await bcrypt.hash(account_password, 10); // Salt rounds set to 10
 
@@ -53,7 +58,7 @@ async function getAccountByEmail(account_email) {
     return account;
   } catch (error) {
     console.error("Error fetching account by email:", error.message);
-    throw error; // Re-throw the error to be handled by the caller
+    throw new Error("No account found with that email. Please try again.");
   }
 }
 
@@ -75,7 +80,7 @@ async function getAccountById(account_id) {
     return account;
   } catch (error) {
     console.error("Error fetching account by ID:", error.message);
-    throw error; // Re-throw the error to be handled by the caller
+    throw new Error("Account not found. Please try again.");
   }
 }
 
@@ -116,6 +121,11 @@ async function updateAccount({
  * Update account password
  * ***************************** */
 async function updatePassword(account_id, new_password) {
+  // Validate password strength
+  if (new_password.length < 6) {
+    throw new Error("Password must be at least 6 characters long.");
+  }
+
   // Hash new password
   const hashedPassword = await bcrypt.hash(new_password, 10); // Salt rounds set to 10
 
