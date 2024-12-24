@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../partials/head') %>
+<%- include('../partials/head') %> <!-- Dynamically includes the head section -->
 
     <body>
-        <div id="wrapper">
-            <%- include('../partials/header') %>
-                <%- include('../partials/navigation') %>
+        <div id="wrapper"> <!-- Wrapper for the entire page -->
+            <%- include('../partials/header') %> <!-- Includes the header partial -->
+
+                <%- include('../partials/navigation') %> <!-- Includes the navigation partial -->
+
                     <main>
-                        <%- body %>
+                        <%- body %> <!-- Placeholder for the main content, injected dynamically -->
                     </main>
 
-                    <%- include('../partials/footer') %>
+                    <%- include('../partials/footer') %> <!-- Includes the footer partial -->
         </div>
     </body>
 

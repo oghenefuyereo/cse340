@@ -10,7 +10,7 @@ async function getClassifications() {
 }
 
 /* ***************************
- *  Get all inventory items and classification_name by classification_id
+ *  Get all inventory items by classification_id
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
   try {
@@ -23,19 +23,27 @@ async function getInventoryByClassificationId(classification_id) {
     );
     return data.rows;
   } catch (error) {
-    console.error("getclassificationsbyid error " + error);
+    console.error("getInventoryByClassificationId error: " + error);
     throw error;
   }
 }
 
-async function getVehicleById(id) {
-  const query = "SELECT * FROM public.inventory WHERE inv_id = $1";
-  const result = await pool.query(query, [id]); // Parameterized query to avoid SQL injection
-  return result.rows[0]; // Assuming the result is an array and we need the first object
+/* ***************************
+ *  Get inventory item by ID
+ * ************************** */
+async function getInventoryById(id) {
+  try {
+    const query = "SELECT * FROM public.inventory WHERE inv_id = $1";
+    const result = await pool.query(query, [id]); // Parameterized query to avoid SQL injection
+    return result.rows[0]; // Assuming the result is an array and we need the first object
+  } catch (error) {
+    console.error("Error in getInventoryById:", error);
+    throw error;
+  }
 }
 
 /* ***************************
- *  Add new classification data
+ *  Add new classification
  * ************************** */
 async function addClassification(classification_name) {
   if (!classification_name || classification_name.trim() === "") {
@@ -55,23 +63,10 @@ async function addClassification(classification_name) {
 }
 
 /* ***************************
- *  Add a new vehicle
+ *  Add new inventory item (vehicle)
  * ************************** */
-async function addVehicle(vehicleData) {
+async function addInventoryItem(vehicleData) {
   const {
-    vehicle_name,
-    vehicle_price,
-    vehicle_year,
-    vehicle_mileage,
-    vehicle_color,
-    classification_id,
-  } = vehicleData;
-
-  /* ***************************
-   *  Update Inventory Data
-   * ************************** */
-  async function updateInventory(
-    inv_id,
     inv_make,
     inv_model,
     inv_description,
@@ -81,12 +76,44 @@ async function addVehicle(vehicleData) {
     inv_year,
     inv_miles,
     inv_color,
-    classification_id
+    classification_id,
+  } = vehicleData;
+
+  // Validate required fields
+  if (
+    !inv_make ||
+    !inv_model ||
+    !inv_description ||
+    !inv_price ||
+    !inv_year ||
+    !inv_miles ||
+    !inv_color ||
+    !classification_id
   ) {
-    try {
-      const sql =
-        "UPDATE public.inventory SET inv_make = $1, inv_model = $2, inv_description = $3, inv_image = $4, inv_thumbnail = $5, inv_price = $6, inv_year = $7, inv_miles = $8, inv_color = $9, classification_id = $10 WHERE inv_id = $11 RETURNING *";
-      const data = await pool.query(sql, [
+    throw new Error("All fields are required.");
+  }
+
+  // Validate price to ensure it's a number
+  if (isNaN(inv_price) || inv_price <= 0) {
+    throw new Error("Price must be a positive number.");
+  }
+
+  // Validate mileage to ensure it's a valid number
+  if (isNaN(inv_miles) || inv_miles < 0) {
+    throw new Error("Mileage must be a valid number.");
+  }
+
+  // Validate year to ensure it's a valid 4-digit year
+  if (isNaN(inv_year) || inv_year < 1000 || inv_year > 9999) {
+    throw new Error("Year must be a valid 4-digit year.");
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO public.inventory 
+      (inv_make, inv_model, inv_description, inv_image, inv_thumbnail, inv_price, inv_year, inv_miles, inv_color, classification_id) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [
         inv_make,
         inv_model,
         inv_description,
@@ -97,123 +124,55 @@ async function addVehicle(vehicleData) {
         inv_miles,
         inv_color,
         classification_id,
-        inv_id,
-      ]);
-      return data.rows[0];
-    } catch (error) {
-      console.error("model error: " + error);
-    }
-  }
-
-  // Validate required fields
-  if (
-    !vehicle_name ||
-    !vehicle_price ||
-    !vehicle_year ||
-    !vehicle_mileage ||
-    !classification_id
-  ) {
-    throw new Error("All fields are required.");
-  }
-
-  // Validate price to ensure it's a number
-  if (isNaN(vehicle_price) || vehicle_price <= 0) {
-    throw new Error("Vehicle price must be a positive number.");
-  }
-
-  // Validate mileage to ensure it's a valid number
-  if (isNaN(vehicle_mileage) || vehicle_mileage < 0) {
-    throw new Error("Mileage must be a valid number.");
-  }
-
-  // Validate year to ensure it's a valid 4-digit year
-  if (isNaN(vehicle_year) || vehicle_year < 1000 || vehicle_year > 9999) {
-    throw new Error("Vehicle year must be a valid 4-digit year.");
-  }
-
-  try {
-    const result = await pool.query(
-      "INSERT INTO public.inventory (vehicle_name, vehicle_price, vehicle_year, vehicle_mileage, vehicle_color, classification_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [
-        vehicle_name,
-        vehicle_price,
-        vehicle_year,
-        vehicle_mileage,
-        vehicle_color,
-        classification_id,
       ]
-    );
-    return result.rows[0]; // Return the newly inserted vehicle
-  } catch (error) {
-    console.error("Error in addVehicle:", error);
-    throw error; // Propagate the error
-  }
-}
-
-async function addClassification(classification_name) {
-  if (!classification_name || classification_name.trim() === "") {
-    throw new Error("Classification name is required.");
-  }
-
-  try {
-    const result = await pool.query(
-      "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *",
-      [classification_name]
     );
     return result.rows[0];
   } catch (error) {
-    console.error("Error in addClassification:", error);
+    console.error("Error in addInventoryItem:", error);
     throw error;
   }
 }
 
-async function addVehicle(vehicleData) {
-  const {
-    vehicle_name,
-    vehicle_price,
-    vehicle_year,
-    vehicle_mileage,
-    vehicle_color,
-    classification_id,
-  } = vehicleData;
-
-  if (
-    !vehicle_name ||
-    !vehicle_price ||
-    !vehicle_year ||
-    !vehicle_mileage ||
-    !classification_id
-  ) {
-    throw new Error("All fields are required.");
-  }
-
-  if (isNaN(vehicle_price) || vehicle_price <= 0) {
-    throw new Error("Vehicle price must be a positive number.");
-  }
-
-  if (isNaN(vehicle_mileage) || vehicle_mileage < 0) {
-    throw new Error("Mileage must be a valid number.");
-  }
-
-  if (isNaN(vehicle_year) || vehicle_year < 1000 || vehicle_year > 9999) {
-    throw new Error("Vehicle year must be a valid 4-digit year.");
-  }
-
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+async function updateInventory(
+  inv_id,
+  inv_make,
+  inv_model,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_year,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
   try {
-    const result = await pool.query(
-      "INSERT INTO public.inventory (vehicle_name, vehicle_price, vehicle_year, vehicle_mileage, vehicle_color, classification_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [
-        vehicle_name,
-        vehicle_price,
-        vehicle_year,
-        vehicle_mileage,
-        vehicle_color,
-        classification_id,
-      ]
-    );
+    const sql = `UPDATE public.inventory 
+      SET inv_make = $1, inv_model = $2, inv_description = $3, inv_image = $4, inv_thumbnail = $5, 
+      inv_price = $6, inv_year = $7, inv_miles = $8, inv_color = $9, classification_id = $10 
+      WHERE inv_id = $11 RETURNING *`;
+
+    const values = [
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+      classification_id,
+      inv_id,
+    ];
+
+    const result = await pool.query(sql, values);
     return result.rows[0];
   } catch (error) {
-    console.error("Error in addVehicle:", error);
+    console.error("Error in updateInventory:", error);
     throw error;
   }
 }
@@ -221,7 +180,8 @@ async function addVehicle(vehicleData) {
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
-  getVehicleById,
+  getInventoryById,
   addClassification,
-  addVehicle,
+  addInventoryItem,
+  updateInventory,
 };

@@ -1,106 +1,186 @@
 const express = require("express");
-const router = new express.Router();
-const utilities = require("../utilities");
-const accountController = require("../controllers/accountController");
-const { check, validationResult } = require("express-validator");
-const regValidate = require("../utilities/account.validation");
+const router = express.Router();
+const invController = require("../controllers/invController");
+const utilities = require("../utilities/");
+const jwt = require("jsonwebtoken");
+const inventoryModel = require("../models/inventoryModel");
 
-// Route to handle login (POST request)
-router.post(
-  "/login",
-  regValidate.loginRules(), // Ensure login data is validated
-  regValidate.checkLoginData, // Check for any validation errors
-  utilities.handleErrors(accountController.accountLogin) // Handle errors and invoke login function
-);
+// Middleware to Check Permissions
+const checkAdminOrEmployee = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    req.flash("error", "Please log in to access this page.");
+    return res.redirect("/login");
+  }
 
-// Route to process registration (POST request)
-router.post(
-  "/register",
-  regValidate.registrationRules(), // Ensure registration data is validated
-  regValidate.checkRegData, // Check registration data and return errors or continue
-  utilities.handleErrors(accountController.registerAccount) // Handle errors and invoke registration function
-);
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (
+      err ||
+      !(decoded.account_type === "Employee" || decoded.account_type === "Admin")
+    ) {
+      req.flash("error", "You do not have permission to access this page.");
+      return res.redirect("/login");
+    }
+    next();
+  });
+};
 
-// Route to handle logout (GET request)
-router.get("/logout", (req, res) => {
-  res.clearCookie("jwt"); // Clear the JWT cookie on logout
-  res.redirect("/"); // Redirect to the home page after logging out
+// Debugging Checks for Controller Methods
+if (!invController.renderManagementView) {
+  console.error("Error: renderManagementView is not defined in invController.");
+}
+if (!invController.renderAddClassificationView) {
+  console.error(
+    "Error: renderAddClassificationView is not defined in invController."
+  );
+}
+if (!invController.addInventoryItem) {
+  console.error("Error: addInventoryItem is not defined in invController.");
+}
+
+/* *****************************
+ * Routes
+ ***************************** */
+
+// Register Route (GET)
+router.get("/register", (req, res) => {
+  res.render("account/register", { title: "Register", messages: req.flash() });
 });
 
-// Route to show the login page (GET request)
-router.get("/login", utilities.handleErrors(accountController.buildLogin));
+// Login Route (GET)
+router.get("/login", (req, res) => {
+  res.render("login", { title: "Login", messages: req.flash() }); // Ensure proper title for login page
+});
 
-// Route to show the registration page (GET request)
-router.get(
-  "/register",
-  utilities.handleErrors(accountController.buildRegister)
-);
+// Login Route (POST)
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
 
-// Route to update account info (GET request)
-router.get(
-  "/update",
-  utilities.checkLogin, // Ensure user is logged in before updating
-  utilities.handleErrors(accountController.buildAccountUpdateView)
-);
+  // Replace with actual database validation logic
+  if (username === "admin" && password === "admin123") {
+    // Create a token (this is just a placeholder, you'd want to generate a real token)
+    const token = jwt.sign(
+      { username, account_type: "Admin" },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
 
-// Route to process account updates (POST request)
-router.post(
-  "/update",
-  [
-    // Validation checks for account info
-    check("account_firstname")
-      .notEmpty()
-      .withMessage("First name is required."),
-    check("account_lastname").notEmpty().withMessage("Last name is required."),
-    check("account_email")
-      .isEmail()
-      .withMessage("Valid email is required.")
-      .custom(async (email, { req }) => {
-        // Custom validation to check if email already exists
-        const accountModel = require("../models/accountModel");
-        const account = await accountModel.getAccountByEmail(email);
-        if (account && account.account_id !== req.body.account_id) {
-          throw new Error("Email address already exists.");
-        }
-      }),
-  ],
-  utilities.handleValidationErrors, // Handle validation errors if any
-  utilities.handleErrors(accountController.updateAccount) // Call update function and handle errors
-);
+    // Set the token in the cookies
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensure security for production
+    });
 
-// Route to process password change (POST request)
-router.post(
-  "/change-password",
-  [
-    // Validation checks for password strength
-    check("new_password")
-      .isLength({ min: 8 })
-      .withMessage("Password must be at least 8 characters long.")
-      .matches(/[A-Z]/)
-      .withMessage("Password must contain at least one uppercase letter.")
-      .matches(/[a-z]/)
-      .withMessage("Password must contain at least one lowercase letter.")
-      .matches(/[0-9]/)
-      .withMessage("Password must contain at least one number.")
-      .not()
-      .matches(/\s/)
-      .withMessage("Password cannot contain spaces."),
-  ],
-  utilities.handleValidationErrors, // Handle validation errors
-  utilities.handleErrors(accountController.changePassword) // Call password change function
-);
-
-// Route to process form submission (POST request) - example route
-router.post(
-  "/submit",
-  [
-    check("email").isEmail().withMessage("Please enter a valid email"),
-    check("password").notEmpty().withMessage("Password cannot be empty"),
-  ],
-  utilities.handleValidationErrors, // Handle validation errors
-  (req, res) => {
-    res.send("Validation passed!"); // Placeholder response on success
+    req.flash("success", "Logged in successfully!");
+    return res.redirect("/dashboard"); // Redirect to dashboard or home page
   }
+
+  req.flash("error", "Invalid username or password.");
+  res.redirect("/login"); // Redirect back to login on failure
+});
+
+// Management View Route (Admin/Employee)
+router.get(
+  "/management",
+  checkAdminOrEmployee,
+  utilities.handleErrors(invController.renderManagementView)
+);
+
+// Add Classification View Route (Admin/Employee)
+router.get(
+  "/add-classification",
+  checkAdminOrEmployee,
+  utilities.handleErrors(invController.renderAddClassificationView)
+);
+
+// Fetch Inventory Items by Classification ID
+router.get(
+  "/type/:id",
+  utilities.handleErrors(async (req, res) => {
+    const typeId = req.params.id;
+
+    try {
+      const inventoryItems = await inventoryModel.getInventoryByTypeId(typeId);
+
+      if (!inventoryItems || inventoryItems.length === 0) {
+        req.flash("info", "No inventory items found for this classification.");
+        return res.redirect("/inv/management");
+      }
+
+      res.render("inventoryList", {
+        items: inventoryItems,
+        title: "Inventory List",
+      });
+    } catch (error) {
+      console.error("Error fetching inventory items by type:", error);
+      req.flash("error", "Failed to load inventory items. Please try again.");
+      res.redirect("/inv/management");
+    }
+  })
+);
+
+// Fetch Inventory Item Details by ID
+router.get(
+  "/detail/:id",
+  utilities.handleErrors(async (req, res) => {
+    const itemId = req.params.id;
+
+    try {
+      const inventoryItem = await inventoryModel.getInventoryById(itemId);
+
+      if (!inventoryItem) {
+        req.flash("info", "Inventory item not found.");
+        return res.redirect("/inv/management");
+      }
+
+      res.render("inventoryDetail", {
+        item: inventoryItem,
+        title: "Inventory Detail",
+      });
+    } catch (error) {
+      console.error("Error fetching inventory item details:", error);
+      req.flash("error", "Failed to load item details. Please try again.");
+      res.redirect("/inv/management");
+    }
+  })
+);
+
+// Add Inventory Item Route (Admin/Employee)
+router.post(
+  "/add-inventory",
+  checkAdminOrEmployee,
+  utilities.handleErrors(async (req, res) => {
+    const {
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      classification_id,
+    } = req.body;
+
+    if (!inv_make || !inv_model || !inv_description || !classification_id) {
+      req.flash("error", "Please fill in all required fields.");
+      return res.redirect("/inv/add-inventory");
+    }
+
+    try {
+      await inventoryModel.addInventoryItem({
+        inv_make,
+        inv_model,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        classification_id,
+      });
+      req.flash("success", "Inventory item added successfully!");
+      res.redirect("/inv/management");
+    } catch (error) {
+      console.error("Error adding inventory item:", error);
+      req.flash("error", "Unable to add inventory item. Please try again.");
+      res.redirect("/inv/add-inventory");
+    }
+  })
 );
 
 module.exports = router;
