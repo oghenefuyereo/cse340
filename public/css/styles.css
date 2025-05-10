@@ -1,6 +1,61 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+header {
+  background-color: #0056b3;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin: 0 10px;
+}
+
+.account {
+  float: right;
+}
+
+main {
+  padding: 20px;
+}
+
+.product {
+  text-align: center;
+}
+
+.upgrades img, .reviews blockquote {
+  width: 100px; /* Adjust size as needed */
+}
+
+/* Media Queries */
+@media screen and (min-width: 768px) {
+  header {
+      text-align: left; /* Adjust logo alignment for larger screens */
+  }
+  
+  nav ul li {
+      margin: 0 20px;
+  }
+
+  .product {
+      display: flex;
+      justify-content: space-around;
+  }
+
+  .upgrades, .reviews {
+      display: flex;
+      justify-content: space-between;
+  }
 }
