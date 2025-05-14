@@ -1,41 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../partials/head') %>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        <%= title %>
-    </title>
-    <link rel="stylesheet" href="/css/styles.css" />
-</head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <div class="top-bar">
+                    <div class="logo">CSE Motors</div>
+                    <div class="account-link">My Account</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Custom</a></li>
+                        <li><a href="#">Sedan</a></li>
+                        <li><a href="#">SUV</a></li>
+                        <li><a href="#">Truck</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-<body>
-    <div class="wrapper">
-        <header>
-            <div class="top-bar">
-                <div class="logo">CSE Motors</div>
-                <div class="account-link">My Account</div>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Custom</a></li>
-                    <li><a href="#">Sedan</a></li>
-                    <li><a href="#">SUV</a></li>
-                    <li><a href="#">Truck</a></li>
-                </ul>
-            </nav>
-        </header>
+            <main>
+                <%- body %>
+            </main>
 
-        <main>
-            <%- body %>
-        </main>
+            <%- include('../partials/footer') %> <!-- ✅ Includes the dynamic footer -->
+        </div>
+    </body>
 
-        <footer>
-            <p>© 2023, CSE 340 App</p>
-        </footer>
-    </div>
-</body>
-
-</html>
+    </html>

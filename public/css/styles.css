@@ -124,7 +124,7 @@ footer {
   }
 
   nav ul {
-      flex-direction: column;
+      flex-direction: row;
       padding: 0;
   }
 
