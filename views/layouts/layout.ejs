@@ -2,50 +2,40 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
         <%= title %>
     </title>
+    <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
 <body>
-    <%- include('layouts/layout') %>
-    <h1>Welcome to the Index Page</h1>
-    <p>This is the content of the index view.</p>
+    <div class="wrapper">
+        <header>
+            <div class="top-bar">
+                <div class="logo">CSE Motors</div>
+                <div class="account-link">My Account</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Custom</a></li>
+                    <li><a href="#">Sedan</a></li>
+                    <li><a href="#">SUV</a></li>
+                    <li><a href="#">Truck</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <header>
-        <h1>Welcome to the Home Page</h1>
-        <p>This is the CSE 340 App.</p>
-    </header>
+        <main>
+            <%- body %>
+        </main>
 
-    <%= body %>
-
-    <main>
-        <h2>Welcome to CSE Motors!</h2>
-        <div class="product">
-            <h3>DMC Delorean</h3>
-            <p>3 Cup holders<br>Superman doors<br>Fuzzy dice!</p>
-            <button>Own Today!</button>
-        </div>
-        <section class="upgrades">
-            <h4>Delorean Upgrades</h4>
-            <ul>
-                <li><img src="/images/flux-cap.png" alt="Flux Capacitor"> Flux Capacitor</li>
-                <li><img src="/images/flame-decals.png" alt="Flame Decals"> Flame Decals</li>
-                <li><img src="/images/bumper-stickers.png" alt="Bumper Stickers"> Bumper Stickers</li>
-                <li><img src="/images/hub-caps.png" alt="Hub Caps"> Hub Caps</li>
-            </ul>
-        </section>
-        <section class="reviews">
-            <h4>DMC Delorean Reviews</h4>
-            <blockquote>"So fast it's almost like traveling in time." (4/5)</blockquote>
-            <blockquote>"Coolest ride on the road." (5/5)</blockquote>
-            <blockquote>"I'm feeling McFly!" (5/5)</blockquote>
-            <blockquote>"The most futuristic ride of our day." (4.5/5)</blockquote>
-            <blockquote>"80's livin and I love it!" (5/5)</blockquote>
-        </section>
-    </main>
+        <footer>
+            <p>© 2023, CSE 340 App</p>
+        </footer>
+    </div>
 </body>
 
 </html>
