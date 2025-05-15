@@ -80,7 +80,7 @@ nav a:hover {
 
 button {
   background-color: #00aaff;
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 10px 15px;
   border: none;
   font-weight: bold;
@@ -90,7 +90,7 @@ button {
 .content-columns {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 70px;
 }
 
 .upgrades ul {
@@ -101,10 +101,28 @@ button {
   gap: 15px;
 }
 
-.upgrades li,
-.reviews blockquote {
+.upgrades li{
   margin-bottom: 10px;
 }
+
+.review-list {
+  list-style-type: disc; /* or 'circle', 'square', etc. */
+  padding-left: 20px;
+  margin: 0;
+}
+
+.review-list li {
+  margin-bottom: 60px;
+}
+
+.review-list blockquote {
+  margin: 0;
+  padding: 10px 15px;
+  background-color: #ffffff;
+  border-left: 0px solid #ffffff;
+  border-radius: 5px;
+}
+
 
 .upgrades img {
   max-width: 100px;
@@ -204,7 +222,7 @@ footer {
 
 .description {
   position: absolute;
-  top: 10%; /* adjust as needed */
+  top: -10%; /* adjust as needed */
   left: 1%; /* adjust as needed */
   max-width: 80%;
   background-color: rgba(255, 255, 255, 0.8); /* semi-transparent background for readability */
@@ -213,5 +231,7 @@ footer {
   border-radius: 10px;
 }
 
-
+.review-list li {
+  margin-bottom: 20px;
+}
 
