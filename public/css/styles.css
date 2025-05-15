@@ -147,43 +147,67 @@ footer {
 
 @media screen and (max-width: 768px) {
   .wrapper {
-      padding: 10px;
+    padding: 10px;
   }
 
   header .top-bar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
   }
 
   nav ul {
-      flex-direction: row;
-      padding: 0;
+    flex-direction: row;
+    padding: 0;
   }
 
   nav li {
-      width: 100%;
+    width: 100%;
   }
 
   nav a {
-      padding: 10px;
-      text-align: left;
+    padding: 10px;
+    text-align: left;
   }
 
   .hero {
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
   }
 
   .hero img {
-      max-width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    z-index: 0;
   }
 
   .description {
-      max-width: 100%;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    max-width: 90%;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    z-index: 1;
+    border-radius: 10px;
   }
 
   .content-columns {
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reviews {
+    order: -1; /* appear before upgrades */
+  }
+
+  .upgrades {
+    order: 1;
   }
 
   .upgrades ul {
@@ -197,41 +221,30 @@ footer {
   .upgrades li img {
     background-color: #00aaff; /* Blue background */
     padding: 20px;
-    
-    }
-  
+    border-radius: 8px;
+  }
+
+  .review-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  .review-list li {
+    margin-bottom: 20px;
+  }
+
+  .review-list blockquote {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border-left: 4px solid #ffffff;
+    border-radius: 5px;
+  }
 
   footer {
-      font-size: 0.8rem;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 40px;
   }
 }
-
-.hero {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  z-index: 0;
-}
-
-.description {
-  position: absolute;
-  top: -10%; /* adjust as needed */
-  left: 1%; /* adjust as needed */
-  max-width: 80%;
-  background-color: rgba(255, 255, 255, 0.8); /* semi-transparent background for readability */
-  padding: 20px;
-  z-index: 1; /* ensures it layers above the image */
-  border-radius: 10px;
-}
-
-.review-list li {
-  margin-bottom: 20px;
-}
-
