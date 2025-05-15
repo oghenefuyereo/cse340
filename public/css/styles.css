@@ -106,8 +106,7 @@ button {
 }
 
 .review-list {
-  list-style-type: disc; /* or 'circle', 'square', etc. */
-  padding-left: 20px;
+  list-style-type: disc; 
   margin: 0;
 }
 
@@ -132,7 +131,7 @@ button {
 }
 
 .upgrades li img {
-  background-color: #00aaff; /* Blue background */
+  background-color: #00aaff; 
   padding: 60px;
   width: 100px;
   height: 70px;
@@ -203,7 +202,7 @@ footer {
   }
 
   .reviews {
-    order: -1; /* appear before upgrades */
+    order: -1; 
   }
 
   .upgrades {
@@ -219,7 +218,7 @@ footer {
   }
 
   .upgrades li img {
-    background-color: #00aaff; /* Blue background */
+    background-color: #00aaff; 
     padding: 20px;
     border-radius: 8px;
   }
