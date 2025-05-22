@@ -6,11 +6,13 @@
 /* ***********************
  * Require Statements
  *************************/
+const baseController = require("./controllers/baseController")
 const expressLayouts = require("express-ejs-layouts");
 const express = require("express");
 const env = require("dotenv").config();
 const app = express();
 const staticRoutes = require("./routes/static"); // Ensure this file exists
+
 
 /* ***********************
  * View Engine and Templates
