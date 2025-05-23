@@ -1,66 +1,68 @@
-/* ******************************************
- * This server.js file is the primary file of the
- * application. It is used to control the project.
- *******************************************/
-
 /* ***********************
  * Require Statements
  *************************/
-const baseController = require("./controllers/baseController")
+const baseController = require("./controllers/baseController");
 const expressLayouts = require("express-ejs-layouts");
 const express = require("express");
 const env = require("dotenv").config();
 const app = express();
-const staticRoutes = require("./routes/static"); // Ensure this file exists
-const inventoryRoute = require("./routes/inventoryRoute"); 
-
+const staticRoutes = require("./routes/static");
+const inventoryRoute = require("./routes/inventoryRoute");
+const utilities = require("./utilities"); // Ensure this exists and has getNav()
 
 /* ***********************
  * View Engine and Templates
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // Layout file in the 'layouts' folder
+app.set("layout", "./layouts/layout");
 
 /* ***********************
  * Middleware for Static Files
  *************************/
-app.use(express.static("public")); // Serve static files from 'public' folder
+app.use(express.static("public"));
 
 /* ***********************
  * Routes
  *************************/
-app.use(staticRoutes); // This is for any custom routes you may have in static.js
-
-// Index route
-app.get("/", function (req, res) {
+app.use(staticRoutes);
+app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
-
-// Inventory routes
 app.use("/inv", inventoryRoute);
 
+/* ***********************
+ * File Not Found Route
+ * Must come AFTER routes
+ *************************/
+app.use(async (req, res, next) => {
+  next({ status: 404, message: "Sorry, we appear to have lost that page." });
+});
 
 /* ***********************
- * Local Server Information
- * Values from .env (environment) file
+ * Global Error Handler
  *************************/
-const port = process.env.PORT || 3000;  // Default to 3000 if not provided
-const host = process.env.HOST || "localhost";  // Default to 'localhost' if not provided
+app.use(async (err, req, res, next) => {
+  const nav = await utilities.getNav();
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  res.status(err.status || 500).render("errors/error", {
+    title: err.status || "Server Error",
+    message: err.message,
+    nav,
+  });
+});
 
-// Debug environment variables
+/* ***********************
+ * Server Info
+ *************************/
+const port = process.env.PORT || 3000;
+const host = process.env.HOST || "localhost";
+
 console.log("PORT:", port);
 console.log("HOST:", host);
-
-// Debug views directory
 console.log("Views directory:", app.get("views"));
-
-// Debug middleware
 console.log("Static middleware loaded: Serving static files from './public'");
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
 app.listen(port, () => {
   console.log(`App listening on http://${host}:${port}`);
 });
