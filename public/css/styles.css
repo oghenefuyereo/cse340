@@ -143,6 +143,47 @@ footer {
   margin-top: 40px;
 }
 
+/* Classification Heading */
+.classification-heading {
+  font-size: 2rem;
+  margin-top: 30px;
+  color: #003366;
+  border-bottom: 2px solid #00aaff;
+  padding-bottom: 10px;
+}
+
+/* Inventory Grid */
+.inventory-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Inventory Item - Assuming grid contains <li> or <div> with classes */
+.inventory-item {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s ease;
+}
+
+.inventory-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Optional: Style inventory images */
+.inventory-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+
+
 @media screen and (max-width: 768px) {
   .wrapper {
     padding: 10px;
@@ -242,5 +283,18 @@ footer {
     font-size: 0.8rem;
     text-align: center;
     margin-top: 40px;
+  }
+
+  /* 👇 Add these two new rules here */
+
+  .classification-heading {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .inventory-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
   }
 }

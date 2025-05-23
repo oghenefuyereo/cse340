@@ -12,6 +12,7 @@ const express = require("express");
 const env = require("dotenv").config();
 const app = express();
 const staticRoutes = require("./routes/static"); // Ensure this file exists
+const inventoryRoute = require("./routes/inventoryRoute"); 
 
 
 /* ***********************
@@ -35,6 +36,10 @@ app.use(staticRoutes); // This is for any custom routes you may have in static.j
 app.get("/", function (req, res) {
   res.render("index", { title: "Home" });
 });
+
+// Inventory routes
+app.use("/inv", inventoryRoute);
+
 
 /* ***********************
  * Local Server Information
