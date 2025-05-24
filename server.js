@@ -1,17 +1,22 @@
 /* ***********************
  * Require Statements
  *************************/
-const baseController = require("./controllers/baseController");
-const expressLayouts = require("express-ejs-layouts");
 const express = require("express");
-const env = require("dotenv").config();
-const app = express();
+const expressLayouts = require("express-ejs-layouts");
+const dotenv = require("dotenv").config();
+
+const baseController = require("./controllers/baseController");
 const staticRoutes = require("./routes/static");
 const inventoryRoute = require("./routes/inventoryRoute");
-const utilities = require("./utilities"); // Ensure this exists and has getNav()
+const utilities = require("./utilities"); // Ensure this exists and exports getNav() and handleErrors
 
 /* ***********************
- * View Engine and Templates
+ * Express App Setup
+ *************************/
+const app = express();
+
+/* ***********************
+ * View Engine and Layouts
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
@@ -26,14 +31,12 @@ app.use(express.static("public"));
  * Routes
  *************************/
 app.use(staticRoutes);
-app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
-});
 app.use("/inv", inventoryRoute);
+app.get("/", utilities.handleErrors(baseController.buildHome)); // Home route
 
 /* ***********************
  * File Not Found Route
- * Must come AFTER routes
+ * Must come AFTER all other routes
  *************************/
 app.use(async (req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." });
@@ -45,9 +48,13 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   const nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  const message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?";
   res.status(err.status || 500).render("errors/error", {
     title: err.status || "Server Error",
-    message: err.message,
+    message,
     nav,
   });
 });
