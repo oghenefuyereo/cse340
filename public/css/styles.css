@@ -1,3 +1,4 @@
+/* Base Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -5,15 +6,16 @@ body {
   padding: 0;
 }
 
+/* Wrapper Container */
 .wrapper {
   max-width: 900px;
   margin: auto;
   background: white;
   padding: 20px;
   border: 2px solid cyan;
-  
 }
 
+/* Header */
 header .top-bar {
   display: flex;
   justify-content: space-between;
@@ -29,6 +31,7 @@ header .top-bar {
   font-size: 0.9rem;
 }
 
+/* Navigation */
 nav ul {
   list-style: none;
   padding: 0;
@@ -52,6 +55,7 @@ nav a:hover {
   background-color: #444;
 }
 
+/* Hero Section */
 .hero {
   position: relative;
   margin-top: 60px;
@@ -72,11 +76,11 @@ nav a:hover {
   z-index: 1;
 }
 
-
 .highlight {
   color: #00aaff;
 }
 
+/* Buttons */
 button {
   background-color: #00aaff;
   color: rgb(0, 0, 0);
@@ -86,12 +90,32 @@ button {
   cursor: pointer;
 }
 
+/* Content Layout */
 .content-columns {
   display: flex;
   justify-content: space-between;
   margin-top: 70px;
 }
 
+/* Vehicle Details */
+.vehicle-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.vehicle-img img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.vehicle-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Upgrades Section */
 .upgrades ul {
   padding: 0;
   list-style: none;
@@ -100,10 +124,25 @@ button {
   gap: 15px;
 }
 
-.upgrades li{
+.upgrades li {
   margin-bottom: 10px;
 }
 
+.upgrades img {
+  max-width: 100px;
+  display: block;
+  margin-bottom: 5px;
+  height: auto;
+}
+
+.upgrades li img {
+  background-color: #00aaff; 
+  padding: 60px;
+  width: 100px;
+  height: 70px;
+}
+
+/* Review List */
 .review-list {
   list-style-type: disc; 
   margin: 0;
@@ -121,22 +160,7 @@ button {
   border-radius: 5px;
 }
 
-
-.upgrades img {
-  max-width: 100px;
-  display: block;
-  margin-bottom: 5px;
-  height: auto;
-}
-
-.upgrades li img {
-  background-color: #00aaff; 
-  padding: 60px;
-  width: 100px;
-  height: 70px;
-  }
-
-
+/* Footer */
 footer {
   text-align: left;
   font-size: 0.9rem;
@@ -160,7 +184,6 @@ footer {
   gap: 20px;
 }
 
-/* Individual Inventory Item - Assuming grid contains <li> or <div> with classes */
 .inventory-item {
   border: 1px solid #ccc;
   padding: 15px;
@@ -174,7 +197,6 @@ footer {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Optional: Style inventory images */
 .inventory-item img {
   max-width: 100%;
   height: auto;
@@ -182,8 +204,7 @@ footer {
   margin-bottom: 10px;
 }
 
-
-
+/* Responsive Styles */
 @media screen and (max-width: 768px) {
   .wrapper {
     padding: 10px;
@@ -237,12 +258,11 @@ footer {
   }
 
   .content-columns {
-    display: flex;
     flex-direction: column;
   }
 
   .reviews {
-    order: -1; 
+    order: -1;
   }
 
   .upgrades {
@@ -250,15 +270,12 @@ footer {
   }
 
   .upgrades ul {
-    padding: 0;
-    list-style: none;
-    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
 
   .upgrades li img {
-    background-color: #00aaff; 
+    background-color: #00aaff;
     padding: 20px;
   }
 
@@ -285,8 +302,6 @@ footer {
     margin-top: 40px;
   }
 
-  /* 👇 Add these two new rules here */
-
   .classification-heading {
     font-size: 1.5rem;
     text-align: center;
@@ -296,5 +311,9 @@ footer {
   .inventory-grid {
     grid-template-columns: 1fr;
     gap: 15px;
+  }
+
+  .vehicle-detail {
+    flex-direction: column;
   }
 }

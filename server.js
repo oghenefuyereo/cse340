@@ -1,55 +1,57 @@
-/* ***********************
+/**************************************
  * Require Statements
- *************************/
+ **************************************/
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const dotenv = require("dotenv").config();
-
 const baseController = require("./controllers/baseController");
 const staticRoutes = require("./routes/static");
 const inventoryRoute = require("./routes/inventoryRoute");
-const utilities = require("./utilities"); // Ensure this exists and exports getNav() and handleErrors
+const utilities = require("./utilities"); // Should export getNav() and handleErrors
 
-/* ***********************
+/**************************************
  * Express App Setup
- *************************/
+ **************************************/
 const app = express();
 
-/* ***********************
+/**************************************
  * View Engine and Layouts
- *************************/
-app.set("view engine", "ejs");
-app.use(expressLayouts);
-app.set("layout", "./layouts/layout");
+ **************************************/
+app.set("view engine", "ejs"); // Set EJS as the view engine
+app.use(expressLayouts); // Use express-ejs-layouts for layout support
+app.set("layout", "./layouts/layout"); // Set default layout file path
 
-/* ***********************
- * Middleware for Static Files
- *************************/
-app.use(express.static("public"));
+/**************************************
+ * Middleware Setup
+ **************************************/
+app.use(express.static("public")); // Serve static files from the "public" directory
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-/* ***********************
- * Routes
- *************************/
-app.use(staticRoutes);
-app.use("/inv", inventoryRoute);
-app.get("/", utilities.handleErrors(baseController.buildHome)); // Home route
+/**************************************
+ * Route Definitions
+ **************************************/
+app.use("/", staticRoutes); // Use staticRoutes for static pages
+app.use("/inv", inventoryRoute); // Use inventoryRoute for inventory-related pages
 
-/* ***********************
- * File Not Found Route
- * Must come AFTER all other routes
- *************************/
-app.use(async (req, res, next) => {
+// Home route using error-handling wrapper
+app.get("/", utilities.handleErrors(baseController.buildHome));
+
+/**************************************
+ * Error Handling
+ **************************************/
+
+// 404 Error Handler: Placed after all valid routes
+app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." });
 });
 
-/* ***********************
- * Global Error Handler
- *************************/
+// Global Error Handler: Handles all errors
 app.use(async (err, req, res, next) => {
-  const nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  const nav = await utilities.getNav(); // Fetch navigation data
+  console.error(`Error at "${req.originalUrl}": ${err.message}`);
   const message =
-    err.status == 404
+    err.status === 404
       ? err.message
       : "Oh no! There was a crash. Maybe try a different route?";
   res.status(err.status || 500).render("errors/error", {
@@ -59,17 +61,21 @@ app.use(async (err, req, res, next) => {
   });
 });
 
-/* ***********************
- * Server Info
- *************************/
-const port = process.env.PORT || 3000;
-const host = process.env.HOST || "localhost";
+/**************************************
+ * Additional Route for Testing
+ **************************************/
+// Route to manually trigger a 500 error for testing
+app.get("/trigger-error", (req, res, next) => {
+  next(new Error("This is a simulated server error"));
+});
 
-console.log("PORT:", port);
-console.log("HOST:", host);
-console.log("Views directory:", app.get("views"));
-console.log("Static middleware loaded: Serving static files from './public'");
+/**************************************
+ * Server Configuration and Start
+ **************************************/
+const port = process.env.PORT || 3000; // Use environment variable PORT or default to 3000
+const host = process.env.HOST || "localhost"; // Use environment variable HOST or default to localhost
 
+// Start server
 app.listen(port, () => {
-  console.log(`App listening on http://${host}:${port}`);
+  console.log(`Server running at http://${host}:${port}`);
 });
