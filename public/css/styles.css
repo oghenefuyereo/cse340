@@ -97,24 +97,71 @@ button {
   margin-top: 70px;
 }
 
-/* Vehicle Details */
+/* Vehicle Details Container */
 .vehicle-detail {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
+  background-color: #f8faff;      /* subtle light background */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  align-items: center;            /* vertically center content */
+  transition: box-shadow 0.3s ease;
+}
+
+.vehicle-detail:hover {
+  box-shadow: 0 8px 24px rgba(0, 170, 255, 0.25); /* subtle glow on hover */
+}
+
+/* Image Container */
+.vehicle-img {
+  flex: 1 1 300px;               /* flexible width but min 300px */
+  max-width: 400px;              /* max width limit */
+  border-radius: 12px;
+  overflow: hidden;              /* clip overflow */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .vehicle-img img {
-  max-width: 100%;
+  width: 100%;                  /* full container width */
   height: auto;
-  border-radius: 8px;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;            /* maintain aspect ratio, crop if needed */
 }
 
+.vehicle-img:hover img {
+  transform: scale(1.05);       /* slight zoom on hover */
+}
+
+/* Vehicle Information */
 .vehicle-info {
-  flex: 1;
-  min-width: 250px;
+  flex: 2 1 350px;              /* bigger flexible area */
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  color: #003366;              /* dark blue text */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Titles and Text in vehicle-info */
+.vehicle-info h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: #007acc;              /* bright accent */
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.vehicle-info p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #333;
+}
 /* Upgrades Section */
 .upgrades ul {
   padding: 0;
@@ -276,7 +323,7 @@ footer {
 
   .upgrades li img {
     background-color: #00aaff;
-    padding: 20px;
+    padding: 20px; 
   }
 
   .review-list {
@@ -293,7 +340,6 @@ footer {
     margin: 0;
     padding: 10px 15px;
     background-color: #ffffff;
-    border-radius: 5px;
   }
 
   footer {
@@ -313,7 +359,24 @@ footer {
     gap: 15px;
   }
 
+  /* Updated vehicle-detail for small screens */
   .vehicle-detail {
     flex-direction: column;
+    gap: 1.5rem;
+    padding: 15px;
+    background-color: #f0f7ff;
+    border-radius: 12px;
+  }
+
+  .vehicle-img, 
+  .vehicle-info {
+    max-width: 100%;
+    flex: none;
+  }
+
+  .vehicle-img img {
+    border-radius: 12px;
+    width: 5px;
+
   }
 }
