@@ -102,49 +102,49 @@ button {
   display: block;
   flex-wrap: wrap;
   gap: 2rem;
-  background-color: #f8faff;      /* subtle light background */
+  background-color: #f8faff;     
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  align-items: center;            /* vertically center content */
+  align-items: center;            
   transition: box-shadow 0.3s ease;
 }
 
 .vehicle-detail:hover {
-  box-shadow: 0 8px 24px rgba(0, 170, 255, 0.25); /* subtle glow on hover */
+  box-shadow: 0 8px 24px rgba(0, 170, 255, 0.25); 
 }
 
 /* Image Container */
 .vehicle-img {
-  flex: 1 1 300px;               /* flexible width but min 300px */
-  max-width: 400px;              /* max width limit */
+  flex: 1 1 300px;               
+  max-width: 400px;             
   border-radius: 12px;
-  overflow: hidden;              /* clip overflow */
+  overflow: hidden;              
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
 .vehicle-img img {
-  width: 100%;                  /* full container width */
+  width: 100%;                  
   height: auto;
   display: block;
   border-radius: 12px;
-  object-fit: cover;            /* maintain aspect ratio, crop if needed */
+  object-fit: cover;            
 }
 
 .vehicle-img:hover img {
-  transform: scale(1.05);       /* slight zoom on hover */
+  transform: scale(1.05);       
 }
 
 /* Vehicle Information */
 .vehicle-info {
-  flex: 2 1 350px;              /* bigger flexible area */
+  flex: 2 1 350px;             
   min-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
-  color: #003366;              /* dark blue text */
+  color: #003366;              
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -152,7 +152,7 @@ button {
 .vehicle-info h2 {
   font-size: 2rem;
   margin: 0;
-  color: #007acc;              /* bright accent */
+  color: #007acc;             
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
