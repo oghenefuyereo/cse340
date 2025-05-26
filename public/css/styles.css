@@ -99,7 +99,7 @@ button {
 
 /* Vehicle Details Container */
 .vehicle-detail {
-  display: flex;
+  display: block;
   flex-wrap: wrap;
   gap: 2rem;
   background-color: #f8faff;      /* subtle light background */
@@ -359,24 +359,5 @@ footer {
     gap: 15px;
   }
 
-  /* Updated vehicle-detail for small screens */
-  .vehicle-detail {
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 15px;
-    background-color: #f0f7ff;
-    border-radius: 12px;
-  }
-
-  .vehicle-img, 
-  .vehicle-info {
-    max-width: 100%;
-    flex: none;
-  }
-
-  .vehicle-img img {
-    border-radius: 12px;
-    width: 5px;
-
-  }
+  
 }

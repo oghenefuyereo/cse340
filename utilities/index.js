@@ -84,14 +84,14 @@ Util.buildDetailHTML = function (vehicle) {
   let html = `
     <section class="vehicle-detail">
       <h1>${vehicle.inv_make} ${vehicle.inv_model}</h1>
-      <div class="vehicle-detail-grid">
+      <div class="vehicle-img">
         <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors">
-        <div class="vehicle-info">
-          <h2>Price: $${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}</h2>
-          <p><strong>Description:</strong> ${vehicle.inv_description}</p>
-          <p><strong>Color:</strong> ${vehicle.inv_color}</p>
-          <p><strong>Miles:</strong> ${new Intl.NumberFormat("en-US").format(vehicle.inv_miles)}</p>
-        </div>
+      </div>
+      <div class="vehicle-info">
+        <h2>Price: $${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}</h2>
+        <p><strong>Description:</strong> ${vehicle.inv_description}</p>
+        <p><strong>Color:</strong> ${vehicle.inv_color}</p>
+        <p><strong>Miles:</strong> ${new Intl.NumberFormat("en-US").format(vehicle.inv_miles)}</p>
       </div>
     </section>
   `
