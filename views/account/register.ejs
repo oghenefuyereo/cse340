@@ -1,24 +1,33 @@
 <section class="login-container">
-  <h1><%= title %></h1>
+    <h1>
+        <%= title %>
+    </h1>
 
-  <% if (messages && messages.error) { %>
-    <div class="flash error"><%= messages.error %></div>
-  <% } %>
+    <% if (messages && messages.error) { %>
+        <div class="flash error">
+            <%= messages.error %>
+        </div>
+        <% } %>
 
-  <form action="/account/register" method="post" class="login-form">
-    <label for="firstname">First Name</label>
-    <input type="text" id="firstname" name="firstname" required value="<%= typeof data != 'undefined' ? data.firstname : '' %>">
+            <form action="/account/register" method="post" class="login-form">
+                <label for="firstname">First Name</label>
+                <input type="text" id="firstname" name="firstname" required
+                    value="<%= typeof data != 'undefined' ? data.firstname : '' %>">
 
-    <label for="lastname">Last Name</label>
-    <input type="text" id="lastname" name="lastname" required value="<%= typeof data != 'undefined' ? data.lastname : '' %>">
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname" name="lastname" required
+                    value="<%= typeof data != 'undefined' ? data.lastname : '' %>">
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required value="<%= typeof data != 'undefined' ? data.email : '' %>">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required
+                    value="<%= typeof data != 'undefined' ? data.email : '' %>">
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required
-           title="Minimum 12 characters, 1 uppercase, 1 number, and 1 special character">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required
+                    title="Minimum 12 characters, 1 uppercase, 1 number, and 1 special character">
 
-    <button type="submit">Register</button>
-  </form>
+                <button type="submit">Register</button>
+            </form>
 </section>
+
+
