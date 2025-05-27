@@ -1,18 +1,15 @@
-const express = require('express')
-const router = express.Router()
-const utilities = require('../utilities') // adjust path if needed
-const accountController = require('../controllers/accountController')
+const express = require('express');
+const router = express.Router();
+const utilities = require('../utilities');
+const accountController = require('../controllers/accountController');
 
-// GET route for /account/login
-router.get('/login', accountController.buildLogin, (error, req, res, next) => {
-  console.error(error)
-  res.status(500).send('Server Error')
-})
+// GET /account/login
+router.get('/login', utilities.handleErrors(accountController.buildLogin));
 
-// GET route for /account/register
-router.get('/register', accountController.buildRegister, (error, req, res, next) => {
-  console.error(error)
-  res.status(500).send('Server Error')
-})
+// GET /account/register
+router.get('/register', utilities.handleErrors(accountController.buildRegister));
 
-module.exports = router
+// POST /account/register
+router.post('/register', utilities.handleErrors(accountController.registerAccount));
+
+module.exports = router;
