@@ -1,5 +1,3 @@
-// controllers/accountController.js
-
 const utilities = require('../utilities')
 
 /* ****************************************
@@ -17,4 +15,20 @@ async function buildLogin(req, res, next) {
   }
 }
 
-module.exports = { buildLogin }
+/* ****************************************
+ *  Deliver registration view
+ * *************************************** */
+async function buildRegister(req, res, next) {
+  try {
+    let nav = await utilities.getNav()
+    res.render('account/register', {
+      title: 'Register',
+      nav,
+      errors: null,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { buildLogin, buildRegister }
