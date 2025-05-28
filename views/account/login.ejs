@@ -1,24 +1,31 @@
+<%- messages() %>
 <section class="login-container">
     <h1>
         <%= title %>
     </h1>
 
-    <% if (messages && messages.error) { %>
-        <div class="flash error">
-            <%= messages.error %>
+    <% if (messages && messages.success) { %>
+        <div class="flash success">
+            <%= messages.success %>
         </div>
         <% } %>
 
-            <form action="/account/login" method="POST" class="login-form">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required
-                    value="<%= typeof data !== 'undefined' ? data.email : '' %>">
+            <% if (messages && messages.error) { %>
+                <div class="flash error">
+                    <%= messages.error %>
+                </div>
+                <% } %>
 
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
+                    <form action="/account/login" method="POST" class="login-form">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required
+                            value="<%= typeof data !== 'undefined' ? data.email : '' %>">
 
-                <button type="submit">Login</button>
-            </form>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" required>
 
-            <p>Don't have an account? <a href="/account/register">Register here</a>.</p>
+                        <button type="submit">Login</button>
+                    </form>
+
+                    <p>Don't have an account? <a href="/account/register">Register here</a>.</p>
 </section>
