@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({ extended: true }));  // <-- body-parser urlencod
  **************************************/
 app.use("/", staticRoutes);
 app.use("/inv", inventoryRoute);
-app.use("/account", accountRoute); // ✅ New line added
+app.use("/account", accountRoute); // 
 
 // Home route using error-handling wrapper
 app.get("/", utilities.handleErrors(baseController.buildHome));

@@ -301,6 +301,26 @@ footer {
   margin-top: 1rem;
 }
 
+.password-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle input {
+  flex: 1;
+  padding-right: 40px; /* space for icon */
+}
+
+.toggle-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
 
 
 /* Responsive Styles */
