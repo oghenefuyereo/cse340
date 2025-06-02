@@ -179,14 +179,14 @@ button {
   max-width: 100px;
   display: block;
   margin-bottom: 5px;
-  height: auto;
+  height: 70px;
 }
 
 .upgrades li img {
   background-color: #00aaff; 
-  padding: 60px;
-  width: 100px;
-  height: 70px;
+  padding: 50px;
+  width: 60px;
+  height: 70;
 }
 
 /* Review List */
@@ -196,7 +196,7 @@ button {
 }
 
 .review-list li {
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 }
 
 .review-list blockquote {
@@ -397,7 +397,7 @@ footer {
 
   .upgrades li img {
     background-color: #00aaff;
-    padding: 20px; 
+    margin-bottom: auto;
   }
 
   .review-list {
