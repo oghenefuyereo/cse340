@@ -34,9 +34,9 @@ Util.getNav = async function () {
 Util.buildClassificationGrid = async function (data) {
   let grid;
   if (data.length > 0) {
-    grid = '<ul id="inv-display">';
+    grid = '<div class="inventory-grid">';
     data.forEach((vehicle) => {
-      grid += "<li>";
+      grid += '<div class="inventory-item">';
       grid +=
         '<a href="/inv/detail/' +
         vehicle.inv_id +
@@ -72,9 +72,9 @@ Util.buildClassificationGrid = async function (data) {
         new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
         "</span>";
       grid += "</div>";
-      grid += "</li>";
+      grid += "</div>";
     });
-    grid += "</ul>";
+    grid += "</div>"; // Close inventory-grid
   } else {
     grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>';
   }
