@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model");
 const utilities = require("../utilities/");
+const { validationResult } = require("express-validator");
 
 const invCont = {};
 
@@ -66,6 +67,77 @@ invCont.buildDetailView = async function (req, res, next) {
     });
   } catch (error) {
     console.error("Error in buildDetailView:", error);
+    next(error);
+  }
+};
+
+/* ***************************
+ *  Build Add Classification View (Task Two)
+ * ************************** */
+invCont.buildAddClassificationView = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav();
+    const errors = req.flash("errors") || [];
+    const message = req.flash("notice") || null;
+
+    res.render("inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      errors,
+      flash: message,
+    });
+  } catch (error) {
+    console.error("Error in buildAddClassificationView:", error);
+    next(error);
+  }
+};
+
+/* ***************************
+ *  Handle Add Classification POST (Task Two)
+ * ************************** */
+invCont.handleAddClassification = async function (req, res, next) {
+  try {
+    const errors = validationResult(req);
+    const nav = await utilities.getNav();
+    const { classification_name } = req.body;
+
+    if (!errors.isEmpty()) {
+      // Validation errors - flash errors and re-render add-classification view
+      const errorMessages = errors.array().map((err) => err.msg);
+      req.flash("errors", errorMessages);
+      return res.status(400).render("inventory/add-classification", {
+        title: "Add Classification",
+        nav,
+        errors: errorMessages,
+        flash: null,
+      });
+    }
+
+    // Insert classification into DB
+    const insertResult = await invModel.addClassification(classification_name);
+
+    if (insertResult) {
+      // Success - rebuild nav, flash success, render management view
+      const newNav = await utilities.getNav();
+      req.flash("notice", `Successfully added classification: ${classification_name}`);
+
+      return res.status(201).render("inventory/management", {
+        title: "Inventory Management",
+        nav: newNav,
+        flash: req.flash("notice"),
+      });
+    } else {
+      // Insert failed - render form with failure message
+      const failureMsg = "Failed to add classification. Please try again.";
+      return res.status(500).render("inventory/add-classification", {
+        title: "Add Classification",
+        nav,
+        errors: [failureMsg],
+        flash: null,
+      });
+    }
+  } catch (error) {
+    console.error("Error in handleAddClassification:", error);
     next(error);
   }
 };
