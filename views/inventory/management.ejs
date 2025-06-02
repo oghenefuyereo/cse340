@@ -1,0 +1,14 @@
+<%- include('../partials/messages') %> <!-- Optional: for displaying flash messages -->
+
+<h1>Inventory Management</h1>
+
+<% if (typeof flash !== 'undefined' && flash.length > 0) { %>
+  <div class="flash">
+    <%= flash %>
+  </div>
+<% } %>
+
+<ul>
+  <li><a href="/inv/add-classification">Add New Classification</a></li>
+  <li><a href="/inv/add-inventory">Add New Inventory Item</a></li>
+</ul>

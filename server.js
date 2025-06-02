@@ -8,9 +8,9 @@ const expressLayouts = require("express-ejs-layouts");
 const dotenv = require("dotenv").config();
 const baseController = require("./controllers/baseController");
 const staticRoutes = require("./routes/static");
-const inventoryRoute = require("./routes/inventoryRoute");
-const accountRoute = require("./routes/accountRoute"); // ✅ New line added
-const utilities = require("./utilities"); // Should export getNav() and handleErrors
+const inventoryRoute = require("./routes/inventoryRoute"); // ✅ make sure this is correct path
+const accountRoute = require("./routes/accountRoute");
+const utilities = require("./utilities");
 const bodyParser = require("body-parser"); 
 
 /**************************************
@@ -50,17 +50,16 @@ app.set("layout", "./layouts/layout");
  * Middleware Setup for Body Parsing & Static Files
  **************************************/
 app.use(express.static("public"));
-app.use(bodyParser.json());                           // <-- body-parser json middleware
-app.use(bodyParser.urlencoded({ extended: true }));  // <-- body-parser urlencoded middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /**************************************
  * Route Definitions
  **************************************/
 app.use("/", staticRoutes);
-app.use("/inv", inventoryRoute);
-app.use("/account", accountRoute); // 
+app.use("/inv", inventoryRoute); // ✅ This enables management view access at /inv
+app.use("/account", accountRoute);
 
-// Home route using error-handling wrapper
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 /**************************************

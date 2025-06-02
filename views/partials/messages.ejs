@@ -1,0 +1,7 @@
+<% if (flash && flash.length > 0) { %>
+  <div class="alert alert-info">
+    <% flash.forEach(function(msg){ %>
+      <p><%= msg %></p>
+    <% }); %>
+  </div>
+<% } %>
