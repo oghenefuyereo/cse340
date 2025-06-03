@@ -1,117 +1,119 @@
-<h1>Add New Inventory Item</h1>
+<div class="form-container">
+  <h1>Add New Inventory Item</h1>
 
-<% if (flash) { %>
-  <p class="flash-message"><%= flash %></p>
-<% } %>
+  <% if (flash) { %>
+    <p class="flash-message"><%= flash %></p>
+  <% } %>
 
-<% if (errors && errors.length > 0) { %>
-  <ul class="errors">
-    <% errors.forEach(error => { %>
-      <li><%= error %></li>
-    <% }) %>
-  </ul>
-<% } %>
+  <% if (errors && errors.length > 0) { %>
+    <ul class="errors">
+      <% errors.forEach(error => { %>
+        <li><%= error %></li>
+      <% }) %>
+    </ul>
+  <% } %>
 
-<form action="/inv/add-inventory" method="POST" novalidate>
+  <form action="/inv/add-inventory" method="POST" novalidate class="form">
 
-  <label for="classificationList">Classification:</label>
-  <%- classificationList %>
+    <label for="classificationList">Classification:</label>
+    <%- classificationList %>
 
-  <label for="invMake">Make:</label>
-  <input
-    type="text"
-    id="invMake"
-    name="inv_make"
-    required
-    pattern=".{1,50}"
-    title="Make is required and max 50 characters."
-    value="<%= inv_make || '' %>"
-  />
+    <label for="invMake">Make:</label>
+    <input
+      type="text"
+      id="invMake"
+      name="inv_make"
+      required
+      pattern=".{1,50}"
+      title="Make is required and max 50 characters."
+      value="<%= inv_make || '' %>"
+    />
 
-  <label for="invModel">Model:</label>
-  <input
-    type="text"
-    id="invModel"
-    name="inv_model"
-    required
-    pattern=".{1,50}"
-    title="Model is required and max 50 characters."
-    value="<%= inv_model || '' %>"
-  />
+    <label for="invModel">Model:</label>
+    <input
+      type="text"
+      id="invModel"
+      name="inv_model"
+      required
+      pattern=".{1,50}"
+      title="Model is required and max 50 characters."
+      value="<%= inv_model || '' %>"
+    />
 
-  <label for="invYear">Year:</label>
-  <input
-    type="number"
-    id="invYear"
-    name="inv_year"
-    required
-    min="1900"
-    max="2099"
-    step="1"
-    value="<%= inv_year || '' %>"
-  />
+    <label for="invYear">Year:</label>
+    <input
+      type="number"
+      id="invYear"
+      name="inv_year"
+      required
+      min="1900"
+      max="2099"
+      step="1"
+      value="<%= inv_year || '' %>"
+    />
 
-  <label for="invDescription">Description:</label>
-  <textarea
-    id="invDescription"
-    name="inv_description"
-    required
-    rows="4"
-    maxlength="1000"
-  ><%= inv_description || '' %></textarea>
+    <label for="invDescription">Description:</label>
+    <textarea
+      id="invDescription"
+      name="inv_description"
+      required
+      rows="4"
+      maxlength="1000"
+    ><%= inv_description || '' %></textarea>
 
-  <label for="invPrice">Price ($):</label>
-  <input
-    type="number"
-    id="invPrice"
-    name="inv_price"
-    required
-    min="0"
-    step="0.01"
-    value="<%= inv_price || '' %>"
-  />
+    <label for="invPrice">Price ($):</label>
+    <input
+      type="number"
+      id="invPrice"
+      name="inv_price"
+      required
+      min="0"
+      step="0.01"
+      value="<%= inv_price || '' %>"
+    />
 
-  <label for="invMiles">Miles:</label>
-  <input
-    type="number"
-    id="invMiles"
-    name="inv_miles"
-    required
-    min="0"
-    step="1"
-    value="<%= inv_miles || '' %>"
-  />
+    <label for="invMiles">Miles:</label>
+    <input
+      type="number"
+      id="invMiles"
+      name="inv_miles"
+      required
+      min="0"
+      step="1"
+      value="<%= inv_miles || '' %>"
+    />
 
-  <label for="invColor">Color:</label>
-  <input
-    type="text"
-    id="invColor"
-    name="inv_color"
-    required
-    pattern=".{1,30}"
-    title="Color is required and max 30 characters."
-    value="<%= inv_color || '' %>"
-  />
+    <label for="invColor">Color:</label>
+    <input
+      type="text"
+      id="invColor"
+      name="inv_color"
+      required
+      pattern=".{1,30}"
+      title="Color is required and max 30 characters."
+      value="<%= inv_color || '' %>"
+    />
 
-  <label for="invImage">Image Path:</label>
-  <input
-    type="text"
-    id="invImage"
-    name="inv_image"
-    required
-    value="<%= inv_image || '/images/no-image-available.png' %>"
-    title="Provide image path or leave default"
-  />
+    <label for="invImage">Image Path:</label>
+    <input
+      type="text"
+      id="invImage"
+      name="inv_image"
+      required
+      value="<%= inv_image || '/images/no-image-available.png' %>"
+      title="Provide image path or leave default"
+    />
 
-  <label for="invThumbnail">Thumbnail Path:</label>
-  <input
-    type="text"
-    id="invThumbnail"
-    name="inv_thumbnail"
-    required
-    value="<%= inv_thumbnail || '/images/no-image-available.png' %>"
-    title="Provide thumbnail path or leave default"
-  />
+    <label for="invThumbnail">Thumbnail Path:</label>
+    <input
+      type="text"
+      id="invThumbnail"
+      name="inv_thumbnail"
+      required
+      value="<%= inv_thumbnail || '/images/no-image-available.png' %>"
+      title="Provide thumbnail path or leave default"
+    />
 
-  <button type="submit" style="margin-top: 20px;">Add Inventory Item</button>
-</form>
+    <button type="submit">Add Inventory Item</button>
+  </form>
+</div>

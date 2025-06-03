@@ -1,9 +1,9 @@
 <%- include('../partials/messages') %>
 
-<h1>Add New Classification</h1>
+<div class="form-container">
+  <h1>Add New Classification</h1>
 
-<form id="addClassificationForm" action="/inv/add-classification" method="POST" novalidate>
-  <div>
+  <form id="addClassificationForm" class="form" action="/inv/add-classification" method="POST" novalidate>
     <label for="classification_name">Classification Name:</label>
     <input
       type="text"
@@ -13,9 +13,9 @@
       pattern="^[a-zA-Z0-9]+$"
       title="Classification name must not contain spaces or special characters"
     />
-  </div>
-  <button type="submit">Add Classification</button>
-</form>
+    <button type="submit">Add Classification</button>
+  </form>
+</div>
 
 <script>
   // Client-side validation on submit
