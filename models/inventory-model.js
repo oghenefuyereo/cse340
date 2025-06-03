@@ -92,7 +92,7 @@ async function addInventoryItem({
     ];
 
     const result = await pool.query(sql, values);
-    return result.rows[0]; // return the inserted inventory item row
+    return result.rows[0]; 
   } catch (error) {
     console.error("addInventoryItem error: " + error);
     return null;
@@ -104,5 +104,5 @@ module.exports = {
   getInventoryByClassificationId,
   getInventoryById,
   addClassification,
-  addInventoryItem, // Export the new function
+  addInventoryItem, 
 };

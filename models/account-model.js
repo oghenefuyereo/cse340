@@ -1,4 +1,4 @@
-const pool = require('../database/index'); // adjust path if needed
+const pool = require('../database/index'); 
 
 /* *****************************
  *   Register new account
@@ -18,7 +18,7 @@ async function registerAccount(account_firstname, account_lastname, account_emai
       hashed_password
     ]);
 
-    return result.rows[0]; // return the inserted user record
+    return result.rows[0]; 
   } catch (error) {
     console.error("Error registering account:", error);
     return null;

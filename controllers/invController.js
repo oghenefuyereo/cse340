@@ -10,7 +10,7 @@ const invCont = {};
 invCont.buildManagementView = async function (req, res, next) {
   try {
     const nav = await utilities.getNav();
-    const message = req.flash("notice") || null; // avoid undefined flash
+    const message = req.flash("notice") || null; 
 
     res.render("inventory/management", {
       title: "Inventory Management",
