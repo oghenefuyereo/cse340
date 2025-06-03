@@ -142,4 +142,112 @@ invCont.handleAddClassification = async function (req, res, next) {
   }
 };
 
+/* ***************************
+ *  Build Add Inventory View (Task Three)
+ * ************************** */
+invCont.buildAddInventoryView = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav();
+    const classificationList = await utilities.buildClassificationList();
+
+    const errors = req.flash("errors") || [];
+    const flash = req.flash("message") || null;
+
+    res.render("inventory/add-inventory", {
+      title: "Add Inventory",
+      nav,
+      classificationList,
+      errors,
+      flash,
+      // Sticky form inputs
+      classification_id: req.body?.classification_id || '',
+      inv_make: req.body?.inv_make || '',
+      inv_model: req.body?.inv_model || '',
+      inv_year: req.body?.inv_year || '',
+      inv_description: req.body?.inv_description || '',
+      inv_price: req.body?.inv_price || '',
+      inv_miles: req.body?.inv_miles || '',
+      inv_color: req.body?.inv_color || '',
+      inv_image: req.body?.inv_image || '/images/no-image-available.png',
+      inv_thumbnail: req.body?.inv_thumbnail || '/images/no-image-available.png',
+    });
+  } catch (error) {
+    console.error("Error in buildAddInventoryView:", error);
+    next(error);
+  }
+};
+
+/* ***************************
+ *  Handle Add Inventory POST (Task Three)
+ * ************************** */
+invCont.handleAddInventory = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav();
+    const classificationList = await utilities.buildClassificationList();
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // Validation errors, flash errors and re-render add-inventory with sticky data
+      const errorMessages = errors.array().map(err => err.msg);
+      req.flash("errors", errorMessages);
+
+      return res.status(400).render("inventory/add-inventory", {
+        title: "Add Inventory",
+        nav,
+        classificationList,
+        errors: errorMessages,
+        flash: null,
+        ...req.body,  // pass form data for sticky inputs
+      });
+    }
+
+    const {
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_price,
+      inv_miles,
+      inv_color,
+      inv_image,
+      inv_thumbnail,
+    } = req.body;
+
+    // Call the model method to insert inventory item
+    const insertResult = await invModel.addInventoryItem({
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_price,
+      inv_miles,
+      inv_color,
+      inv_image,
+      inv_thumbnail,
+    });
+
+    if (insertResult) {
+      req.flash("message", `Successfully added new inventory item: ${inv_make} ${inv_model}`);
+      return res.redirect("/inv/"); // Redirect to inventory management page
+    } else {
+      // Insert failed
+      const failureMsg = "Failed to add inventory item. Please try again.";
+      return res.status(500).render("inventory/add-inventory", {
+        title: "Add Inventory",
+        nav,
+        classificationList,
+        errors: [failureMsg],
+        flash: null,
+        ...req.body,
+      });
+    }
+  } catch (error) {
+    console.error("Error in handleAddInventory:", error);
+    next(error);
+  }
+};
+
 module.exports = invCont;

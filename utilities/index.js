@@ -108,6 +108,25 @@ Util.buildDetailHTML = function (vehicle) {
   return html;
 };
 
+/* **************************************
+ * Build classification list for forms (select options)
+ ************************************** */
+Util.buildClassificationList = async function () {
+  try {
+    const data = await invModel.getClassifications();
+    let list = '<select name="classification_id" id="classificationList" required>';
+    list += '<option value="" disabled selected>Choose a Classification</option>';
+    data.rows.forEach((row) => {
+      list += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+    });
+    list += '</select>';
+    return list;
+  } catch (error) {
+    console.error("Error building classification list: ", error);
+    return null;
+  }
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  **************************************** */
