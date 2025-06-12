@@ -3,6 +3,14 @@
 <div class="form-container">
   <h1>Add New Classification</h1>
 
+  <% if (errors && errors.length > 0) { %>
+    <ul class="errors" style="color: red; margin-bottom: 1em;">
+      <% errors.forEach(function(error) { %>
+        <li><%= typeof error === 'string' ? error : (error.msg || 'Unknown error') %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
   <form id="addClassificationForm" class="form" action="/inv/add-classification" method="POST" novalidate>
     <label for="classification_name">Classification Name:</label>
     <input
@@ -12,22 +20,8 @@
       required
       pattern="^[a-zA-Z0-9]+$"
       title="Classification name must not contain spaces or special characters"
+      value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>"
     />
     <button type="submit">Add Classification</button>
   </form>
 </div>
-
-<script>
-  // Client-side validation on submit
-  const form = document.getElementById('addClassificationForm');
-  form.addEventListener('submit', function(event) {
-    const input = document.getElementById('classification_name');
-    const pattern = /^[a-zA-Z0-9]+$/;
-
-    if (!pattern.test(input.value)) {
-      event.preventDefault();
-      alert("Classification name must not contain spaces or special characters.");
-      input.focus();
-    }
-  });
-</script>
