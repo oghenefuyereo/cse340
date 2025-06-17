@@ -1,0 +1,73 @@
+<div class="form-container">
+  <h1>Edit Inventory Item</h1>
+
+  <% if (typeof success !== 'undefined' && success.length > 0) { %>
+    <p class="flash-message success"><%= success[0] %></p>
+  <% } %>
+
+  <% if (errors && errors.length > 0) { %>
+    <ul class="errors" style="color: red; margin-bottom: 1em;">
+      <% errors.forEach(function(error) { %>
+        <li><%= typeof error === 'string' ? error : (error.msg || 'Unknown error') %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form id="updateForm" action="/inv/update" method="POST" novalidate class="form">
+    <input type="hidden" name="inv_id" value="<%= inv_id %>">
+
+    <label for="classificationList">Classification:</label>
+    <%- classificationSelect %>
+
+    <label for="invMake">Make:</label>
+    <input type="text" id="invMake" name="inv_make" required pattern=".{1,50}" title="Make is required and max 50 characters." value="<%= inv_make || '' %>" />
+
+    <label for="invModel">Model:</label>
+    <input type="text" id="invModel" name="inv_model" required pattern=".{1,50}" title="Model is required and max 50 characters." value="<%= inv_model || '' %>" />
+
+    <label for="invYear">Year:</label>
+    <input type="number" id="invYear" name="inv_year" required min="1900" max="2099" step="1" value="<%= inv_year || '' %>" />
+
+    <label for="invDescription">Description:</label>
+    <textarea id="invDescription" name="inv_description" required rows="4" maxlength="1000"><%= inv_description || '' %></textarea>
+
+    <label for="invPrice">Price ($):</label>
+    <input type="number" id="invPrice" name="inv_price" required min="0" step="0.01" value="<%= inv_price || '' %>" />
+
+    <label for="invMiles">Miles:</label>
+    <input type="number" id="invMiles" name="inv_miles" required min="0" step="1" value="<%= inv_miles || '' %>" />
+
+    <label for="invColor">Color:</label>
+    <input type="text" id="invColor" name="inv_color" required pattern=".{1,30}" title="Color is required and max 30 characters." value="<%= inv_color || '' %>" />
+
+    <label for="invImage">Image Path:</label>
+    <input type="text" id="invImage" name="inv_image" required value="<%= inv_image || '/images/no-image-available.png' %>" title="Provide image path or leave default" />
+
+    <label for="invThumbnail">Thumbnail Path:</label>
+    <input type="text" id="invThumbnail" name="inv_thumbnail" required value="<%= inv_thumbnail || '/images/no-image-available.png' %>" title="Provide thumbnail path or leave default" />
+
+    <button type="submit" id="submitBtn" disabled>Update Vehicle</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('updateForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Check form validity on input change
+    form.addEventListener('input', () => {
+      if (form.checkValidity()) {
+        submitBtn.disabled = false;
+      } else {
+        submitBtn.disabled = true;
+      }
+    });
+
+    // Optional: prevent submission if invalid
+    form.addEventListener('submit', (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        alert("Please correct the highlighted errors before submitting.");
+      }
+    });
+  </script>
+</div>

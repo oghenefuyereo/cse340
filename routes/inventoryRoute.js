@@ -4,47 +4,152 @@ const invController = require("../controllers/invController");
 const utilities = require("../utilities");
 const { body } = require("express-validator");
 
-// Management page
+/* ***************************
+ * Inventory Management View
+ * *************************** */
 router.get("/", utilities.handleErrors(invController.buildManagementView));
 
-// Inventory by classification
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
+/* ***************************
+ * Inventory by classification (HTML view)
+ * *************************** */
+router.get(
+  "/type/:classificationId",
+  utilities.handleErrors(invController.buildByClassificationId)
+);
 
-// Vehicle detail
-router.get("/detail/:inv_id", utilities.handleErrors(invController.buildDetailView));
+/* ***************************
+ * JSON inventory data by classification ID
+ * *************************** */
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
 
-// Add classification form
-router.get("/add-classification", utilities.handleErrors(invController.buildAddClassificationView));
+/* ***************************
+ * Vehicle detail view
+ * *************************** */
+router.get(
+  "/detail/:inv_id",
+  utilities.handleErrors(invController.buildDetailView)
+);
 
-// Add classification submission
+/* ***************************
+ * Add Classification View
+ * *************************** */
+router.get(
+  "/add-classification",
+  utilities.handleErrors(invController.buildAddClassificationView)
+);
+
+/* ***************************
+ * Add Classification Submission
+ * *************************** */
 router.post(
   "/add-classification",
   body("classification_name")
     .trim()
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage("Classification name must not contain spaces or special characters."),
+    // Allow letters, numbers, spaces, and hyphens. Adjust if you want stricter rules
+    .matches(/^[a-zA-Z0-9\s-]+$/)
+    .withMessage(
+      "Classification name must contain only letters, numbers, spaces, or hyphens."
+    )
+    .escape(),
   utilities.handleErrors(invController.handleAddClassification)
 );
 
-// Add inventory form (NEW)
+/* ***************************
+ * Add Inventory View
+ * *************************** */
 router.get(
   "/add-inventory",
   utilities.handleErrors(invController.buildAddInventoryView)
 );
 
-// Add inventory submission (NEW)
+/* ***************************
+ * Add Inventory Submission
+ * *************************** */
 router.post(
   "/add-inventory",
-  body("classification_id").notEmpty().withMessage("Classification is required"),
-  body("inv_make").trim().notEmpty().withMessage("Make is required"),
-  body("inv_model").trim().notEmpty().withMessage("Model is required"),
+  body("classification_id")
+    .notEmpty()
+    .withMessage("Classification is required")
+    .toInt(),
+  body("inv_make")
+    .trim()
+    .notEmpty()
+    .withMessage("Make is required")
+    .escape(),
+  body("inv_model")
+    .trim()
+    .notEmpty()
+    .withMessage("Model is required")
+    .escape(),
   body("inv_year")
     .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
-    .withMessage("Enter a valid year"),
-  body("inv_price").isFloat({ gt: 0 }).withMessage("Price must be greater than zero"),
-  body("inv_miles").isInt({ min: 0 }).withMessage("Miles must be zero or more"),
-  body("inv_color").trim().notEmpty().withMessage("Color is required"),
+    .withMessage("Enter a valid year")
+    .toInt(),
+  body("inv_price")
+    .isFloat({ gt: 0 })
+    .withMessage("Price must be greater than zero")
+    .toFloat(),
+  body("inv_miles")
+    .isInt({ min: 0 })
+    .withMessage("Miles must be zero or more")
+    .toInt(),
+  body("inv_color")
+    .trim()
+    .notEmpty()
+    .withMessage("Color is required")
+    .escape(),
+  // Optional: you can add validation for inv_image and inv_thumbnail if needed
   utilities.handleErrors(invController.handleAddInventory)
+);
+
+/* ***************************
+ * Edit Inventory View
+ * *************************** */
+router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
+);
+
+/* ***************************
+ * Update Inventory Submission
+ * *************************** */
+router.post(
+  "/update/",
+  body("classification_id")
+    .notEmpty()
+    .withMessage("Classification is required")
+    .toInt(),
+  body("inv_make")
+    .trim()
+    .notEmpty()
+    .withMessage("Make is required")
+    .escape(),
+  body("inv_model")
+    .trim()
+    .notEmpty()
+    .withMessage("Model is required")
+    .escape(),
+  body("inv_year")
+    .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
+    .withMessage("Enter a valid year")
+    .toInt(),
+  body("inv_price")
+    .isFloat({ gt: 0 })
+    .withMessage("Price must be greater than zero")
+    .toFloat(),
+  body("inv_miles")
+    .isInt({ min: 0 })
+    .withMessage("Miles must be zero or more")
+    .toInt(),
+  body("inv_color")
+    .trim()
+    .notEmpty()
+    .withMessage("Color is required")
+    .escape(),
+  utilities.handleErrors(invController.updateInventory)
 );
 
 module.exports = router;
