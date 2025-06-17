@@ -1,5 +1,5 @@
 <section class="login-container">
-  <% if (errors && errors.length > 0) { %>
+  <% if (Array.isArray(errors) && errors.length > 0) { %>
     <ul class="notice">
       <% errors.forEach(error => { %>
         <li><%= error.msg %></li>
@@ -7,51 +7,85 @@
     </ul>
   <% } %>
 
+  <% if (Array.isArray(messages) && messages.length > 0) { %>
+    <div class="flash notice">
+      <% messages.forEach(message => { %>
+        <p><%= message %></p>
+      <% }) %>
+    </div>
+  <% } %>
+
   <h1><%= title %></h1>
 
-  <% if (messages && messages.error) { %>
-    <div class="flash error">
-      <%= messages.error %>
-    </div>
-  <% } %>
-
-  <% if (messages && messages.success) { %>
-    <div class="flash success">
-      <%= messages.success %>
-    </div>
-  <% } %>
-
   <form action="/account/register" method="POST" class="login-form">
-  <label for="account_firstname">First Name</label>
-  <input type="text" id="account_firstname" name="account_firstname" required
-    value="<%= locals.account_firstname || '' %>">
+    <label for="account_firstname">First Name</label>
+    <input
+      type="text"
+      id="account_firstname"
+      name="account_firstname"
+      required
+      value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>"
+    >
 
-  <label for="account_lastname">Last Name</label>
-  <input type="text" id="account_lastname" name="account_lastname" required
-    value="<%= locals.account_lastname || '' %>">
+    <label for="account_lastname">Last Name</label>
+    <input
+      type="text"
+      id="account_lastname"
+      name="account_lastname"
+      required
+      value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>"
+    >
 
-  <label for="account_email">Email</label>
-  <input type="email" id="account_email" name="account_email" required
-    value="<%= locals.account_email || '' %>">
+    <label for="account_email">Email</label>
+    <input
+      type="email"
+      id="account_email"
+      name="account_email"
+      required
+      value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
+    >
 
-  <label for="accountPassword">Password</label>
-  <div class="password-toggle">
-    <input type="password" name="account_password" id="accountPassword" required
-      pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
-    <span class="toggle-icon" onclick="togglePassword()">
-      <!-- Eye icon -->
-      <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
-      </svg>
+    <label for="accountPassword">Password</label>
+    <div class="password-toggle">
+      <input
+        type="password"
+        name="account_password"
+        id="accountPassword"
+        required
+        pattern="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\\s).{11,}$"
+      >
+      <span class="toggle-icon" onclick="togglePassword()">
+        <svg
+          id="eyeIcon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z"
+          />
+        </svg>
+      </span>
+    </div>
+    <span class="hint">
+      Passwords must be at least 11 characters and contain at least 1 number,
+      1 capital letter and 1 special character.
     </span>
-  </div>
-  <span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span>
 
-  <button type="submit">Register</button>
-</form>
+    <button type="submit">Register</button>
+  </form>
+</section>
 
 <script src="/js/script.js"></script>

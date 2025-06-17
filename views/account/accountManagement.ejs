@@ -1,0 +1,17 @@
+<h1>Account Management</h1>
+<h3> Welcome <%= firstName %></h3>
+<p>You're logged in.</p>
+
+<% if (messages && messages.length > 0) { %>
+  <div class="flash-messages">
+    <% messages.forEach(message => { %>
+      <p><%= message %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<% if (errors) { %>
+  <div class="errors">
+    <p><%= errors %></p>
+  </div>
+<% } %>
