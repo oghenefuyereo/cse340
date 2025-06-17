@@ -20,24 +20,33 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 /**************************************
- * Middleware
+ * Middleware - Session Setup
  **************************************/
-// Session store setup with connect-pg-simple
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     pool,
     createTableIfMissing: true,
   }),
   secret: process.env.SESSION_SECRET,
-  resave: false,           // better to set false unless you need it true
-  saveUninitialized: false, // better to set false for security reasons
+  resave: false,
+  saveUninitialized: false,
   name: 'sessionId',
 }));
 
-// Flash messages middleware
+/**************************************
+ * Middleware - Flash Messages
+ **************************************/
 app.use(require('connect-flash')());
-app.use(function(req, res, next){
+app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+/**************************************
+ * Middleware - Expose session data to views
+ **************************************/
+app.use((req, res, next) => {
+  res.locals.accountData = req.session.accountData || null;
   next();
 });
 
@@ -46,10 +55,10 @@ app.use(function(req, res, next){
  **************************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
-app.set("layout", "layouts/layout"); // remove the leading "./" — just folder and filename
+app.set("layout", "layouts/layout");
 
 /**************************************
- * Middleware Setup for Body Parsing & Static Files
+ * Middleware - Static & Parsing
  **************************************/
 app.use(express.static("public"));
 app.use(bodyParser.json());
@@ -63,7 +72,6 @@ app.use(utilities.checkJWTToken);
 app.use("/", staticRoutes);
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
-
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 /**************************************
@@ -87,14 +95,14 @@ app.use(async (err, req, res, next) => {
 });
 
 /**************************************
- * Additional Route for Testing
+ * Test Route (Optional)
  **************************************/
 app.get("/trigger-error", (req, res, next) => {
   next(new Error("This is a simulated server error"));
 });
 
 /**************************************
- * Server Configuration and Start
+ * Server Start
  **************************************/
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || "localhost";

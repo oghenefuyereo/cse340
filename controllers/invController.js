@@ -244,6 +244,21 @@ invCont.editInventoryView = async function (req, res, next) {
 invCont.updateInventory = async function (req, res, next) {
   try {
     const nav = await utilities.getNav();
+
+    // Validation check
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const errorMessages = errors.array().map(err => err.msg);
+      const classificationSelect = await utilities.buildClassificationList(req.body.classification_id);
+      return res.status(400).render("inventory/edit-inventory", {
+        title: "Edit Inventory",
+        nav,
+        classificationSelect,
+        errors: errorMessages,
+        ...req.body,
+      });
+    }
+
     const {
       inv_id,
       inv_make,
@@ -257,8 +272,6 @@ invCont.updateInventory = async function (req, res, next) {
       inv_color,
       classification_id,
     } = req.body;
-
-    // Optionally, you can add validationResult check here as well
 
     const updateResult = await invModel.updateInventory(
       inv_id,
@@ -286,17 +299,7 @@ invCont.updateInventory = async function (req, res, next) {
         nav,
         classificationSelect,
         errors: null,
-        inv_id,
-        inv_make,
-        inv_model,
-        inv_year,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
-        inv_price,
-        inv_miles,
-        inv_color,
-        classification_id,
+        ...req.body,
       });
     }
   } catch (error) {

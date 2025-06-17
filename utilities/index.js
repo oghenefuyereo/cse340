@@ -1,14 +1,13 @@
 const invModel = require("../models/inventory-model");
-const jwt = require("jsonwebtoken")
-require("dotenv").config()
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const Util = {};
 
 const { body, validationResult } = require("express-validator");
-const validate = {};
 
-/* ************************
+/* ****************************************
  * Constructs the nav HTML unordered list
- ************************** */
+ **************************************** */
 Util.getNav = async function () {
   let data = await invModel.getClassifications();
   let list = "<ul>";
@@ -135,38 +134,80 @@ Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 /* ****************************************
-* Middleware to check token validity
-**************************************** */
+ * Middleware to check token validity
+ **************************************** */
 Util.checkJWTToken = (req, res, next) => {
- if (req.cookies.jwt) {
-  jwt.verify(
-   req.cookies.jwt,
-   process.env.ACCESS_TOKEN_SECRET,
-   function (err, accountData) {
-    if (err) {
-     req.flash("Please log in")
-     res.clearCookie("jwt")
-     return res.redirect("/account/login")
-    }
-    res.locals.accountData = accountData
-    res.locals.loggedin = 1
-    next()
-   })
- } else {
-  next()
- }
-}
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("notice", "Please log in");
+          res.clearCookie("jwt");
+          return res.redirect("/account/login");
+        }
+        res.locals.accountData = accountData;
+        res.locals.loggedin = 1;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
 
 /* ****************************************
- *  Check Login
- * ************************************ */
- Util.checkLogin = (req, res, next) => {
+ * Middleware to check for logged-in user
+ **************************************** */
+Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
-    next()
+    next();
   } else {
-    req.flash("notice", "Please log in.")
-    return res.redirect("/account/login")
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
   }
- }
+};
+
+/* ****************************************
+ * Middleware to allow only Employee or Admin account types
+ **************************************** */
+Util.checkAdminOrEmployee = (req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    // No token found
+    return res.status(401).render("account/login", {
+      title: "Login",
+      messages: ["You must be logged in to access this page."],
+      account_email: "",
+    });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      // Token invalid or expired
+      return res.status(401).render("account/login", {
+        title: "Login",
+        messages: ["Session expired or invalid. Please log in again."],
+        account_email: "",
+      });
+    }
+
+    // Check account type
+    if (decoded.account_type === "Employee" || decoded.account_type === "Admin") {
+      res.locals.accountData = decoded; // Optionally set this here too
+      res.locals.loggedin = 1;
+      return next();
+    } else {
+      // Unauthorized access
+      return res.status(403).render("account/login", {
+        title: "Login",
+        messages: ["You do not have permission to access this page."],
+        account_email: "",
+      });
+    }
+  });
+};
 
 module.exports = Util;

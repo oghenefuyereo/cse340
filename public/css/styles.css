@@ -370,6 +370,67 @@ footer {
 }
 
 
+.page-title {
+  font-size: 2em;
+  margin-bottom: 1em;
+  color: #2c3e50;
+}
+
+.form-card {
+  background: #fff;
+  padding: 2em;
+  margin-bottom: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  padding: 0.75em;
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-submit {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em 1.5em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-submit:hover {
+  background-color: #2980b9;
+}
+
+.flash-messages,
+.errors {
+  padding: 1em;
+  border-radius: 5px;
+  margin-bottom: 1em;
+}
+
+.flash-messages {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.errors {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.password-help {
+  font-size: 0.85em;
+  color: #7f8c8d;
+}
+
+
 
 
 

@@ -1,6 +1,10 @@
 <h1>Account Management</h1>
-<h3> Welcome <%= firstName %></h3>
+
+<h2>Welcome <%= accountData.account_firstname %></h2>
+
 <p>You're logged in.</p>
+
+<p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
 
 <% if (messages && messages.length > 0) { %>
   <div class="flash-messages">
@@ -14,4 +18,9 @@
   <div class="errors">
     <p><%= errors %></p>
   </div>
+<% } %>
+
+<% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+  <h3>Inventory Management</h3>
+  <p><a href="/inv/">Go to Inventory Management</a></p>
 <% } %>

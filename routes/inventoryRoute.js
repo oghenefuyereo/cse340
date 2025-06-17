@@ -6,11 +6,13 @@ const { body } = require("express-validator");
 
 /* ***************************
  * Inventory Management View
+ * (No restriction, open to all)
  * *************************** */
 router.get("/", utilities.handleErrors(invController.buildManagementView));
 
 /* ***************************
  * Inventory by classification (HTML view)
+ * (Open to all visitors)
  * *************************** */
 router.get(
   "/type/:classificationId",
@@ -19,6 +21,7 @@ router.get(
 
 /* ***************************
  * JSON inventory data by classification ID
+ * (Open to all visitors)
  * *************************** */
 router.get(
   "/getInventory/:classification_id",
@@ -27,6 +30,7 @@ router.get(
 
 /* ***************************
  * Vehicle detail view
+ * (Open to all visitors)
  * *************************** */
 router.get(
   "/detail/:inv_id",
@@ -35,17 +39,21 @@ router.get(
 
 /* ***************************
  * Add Classification View
+ * Only Employee or Admin allowed
  * *************************** */
 router.get(
   "/add-classification",
+  utilities.checkAdminOrEmployee,
   utilities.handleErrors(invController.buildAddClassificationView)
 );
 
 /* ***************************
  * Add Classification Submission
+ * Only Employee or Admin allowed
  * *************************** */
 router.post(
   "/add-classification",
+  utilities.checkAdminOrEmployee,
   body("classification_name")
     .trim()
     .matches(/^[a-zA-Z0-9\s-]+$/)
@@ -58,17 +66,21 @@ router.post(
 
 /* ***************************
  * Add Inventory View
+ * Only Employee or Admin allowed
  * *************************** */
 router.get(
   "/add-inventory",
+  utilities.checkAdminOrEmployee,
   utilities.handleErrors(invController.buildAddInventoryView)
 );
 
 /* ***************************
  * Add Inventory Submission
+ * Only Employee or Admin allowed
  * *************************** */
 router.post(
   "/add-inventory",
+  utilities.checkAdminOrEmployee,
   body("classification_id")
     .notEmpty()
     .withMessage("Classification is required")
@@ -93,17 +105,21 @@ router.post(
 
 /* ***************************
  * Edit Inventory View
+ * Only Employee or Admin allowed
  * *************************** */
 router.get(
   "/edit/:inv_id",
+  utilities.checkAdminOrEmployee,
   utilities.handleErrors(invController.editInventoryView)
 );
 
 /* ***************************
  * Update Inventory Submission
+ * Only Employee or Admin allowed
  * *************************** */
 router.post(
   "/update/",
+  utilities.checkAdminOrEmployee,
   body("classification_id")
     .notEmpty()
     .withMessage("Classification is required")
@@ -128,17 +144,21 @@ router.post(
 
 /* ***************************
  * Delete Inventory View (Confirmation)
+ * Only Employee or Admin allowed
  * *************************** */
 router.get(
   "/delete/:inv_id",
-  utilities.handleErrors(invController.buildDeleteView) // fixed name here
+  utilities.checkAdminOrEmployee,
+  utilities.handleErrors(invController.buildDeleteView)
 );
 
 /* ***************************
  * Delete Inventory Submission
+ * Only Employee or Admin allowed
  * *************************** */
 router.post(
   "/delete",
+  utilities.checkAdminOrEmployee,
   body("inv_id").isInt().withMessage("Invalid inventory ID").toInt(),
   utilities.handleErrors(invController.deleteInventoryItem)
 );

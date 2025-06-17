@@ -1,0 +1,94 @@
+<h1 class="page-title"><%= title %></h1>
+
+<!-- Flash Messages -->
+<% if (notice && notice.length > 0) { %>
+  <div class="flash-messages">
+    <% notice.forEach(message => { %>
+      <p><%= message %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<!-- Error Messages -->
+<% if (errors && errors.length > 0) { %>
+  <div class="errors">
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<!-- Account Update Form -->
+<form class="form-card" action="/account/update/<%= accountData.account_id %>" method="POST" novalidate>
+  <input type="hidden" name="account_id" value="<%= accountData.account_id %>" />
+
+  <label for="account_firstname">First Name</label>
+  <input
+    type="text"
+    id="account_firstname"
+    name="account_firstname"
+    class="form-input"
+    value="<%= accountData.account_firstname %>"
+    required
+    minlength="1"
+  />
+
+  <label for="account_lastname">Last Name</label>
+  <input
+    type="text"
+    id="account_lastname"
+    name="account_lastname"
+    class="form-input"
+    value="<%= accountData.account_lastname %>"
+    required
+    minlength="1"
+  />
+
+  <label for="account_email">Email Address</label>
+  <input
+    type="email"
+    id="account_email"
+    name="account_email"
+    class="form-input"
+    value="<%= accountData.account_email %>"
+    required
+  />
+
+  <input class="form-submit" type="submit" value="Update Account" />
+</form>
+
+<!-- Change Password Form -->
+<form class="form-card" action="/account/updatePassword/<%= accountData.account_id %>" method="POST" novalidate>
+  <input type="hidden" name="account_id" value="<%= accountData.account_id %>" />
+
+  <label for="newPassword">New Password</label>
+  <input
+    type="password"
+    id="newPassword"
+    name="newPassword"
+    class="form-input"
+    minlength="12"
+    required
+    aria-describedby="passwordHelp"
+    autocomplete="new-password"
+  />
+
+  <label for="confirmPassword">Confirm New Password</label>
+  <input
+    type="password"
+    id="confirmPassword"
+    name="confirmPassword"
+    class="form-input"
+    minlength="12"
+    required
+    autocomplete="new-password"
+  />
+
+  <p id="passwordHelp" class="password-help">
+    Password must be at least 12 characters and include uppercase, lowercase, number, and symbol.
+  </p>
+
+  <input class="form-submit" type="submit" value="Change Password" />
+</form>
