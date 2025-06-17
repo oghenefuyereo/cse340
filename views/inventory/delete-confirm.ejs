@@ -1,0 +1,56 @@
+<main>
+  <div class="form-container">
+    <h1>Delete Inventory Item</h1>
+
+    <p>Confirm Deletion - <strong>This action is permanent and cannot be undone.</strong></p>
+
+    <form 
+      class="login-form" 
+      action="/inv/delete/" 
+      method="post"
+    >
+      <label for="inv_make">Make</label>
+      <input 
+        type="text" 
+        id="inv_make" 
+        name="inv_make" 
+        value="<%= inv_make || inv_data.inv_make %>" 
+        readonly
+      >
+
+      <label for="inv_model">Model</label>
+      <input 
+        type="text" 
+        id="inv_model" 
+        name="inv_model" 
+        value="<%= inv_model || inv_data.inv_model %>" 
+        readonly
+      >
+
+      <label for="inv_year">Year</label>
+      <input 
+        type="text" 
+        id="inv_year" 
+        name="inv_year" 
+        value="<%= inv_year || inv_data.inv_year %>" 
+        readonly
+      >
+
+      <label for="inv_price">Price</label>
+      <input 
+        type="text" 
+        id="inv_price" 
+        name="inv_price" 
+        value="<%= inv_price || inv_data.inv_price %>" 
+        readonly
+      >
+
+      <!-- Hidden input to store inv_id -->
+      <input type="hidden" name="inv_id" value="<%= inv_id || inv_data.inv_id %>">
+
+      <input type="submit" value="Delete" class="btn btn-danger">
+    </form>
+  </div>
+</main>
+
+

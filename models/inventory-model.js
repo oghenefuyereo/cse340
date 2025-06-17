@@ -50,10 +50,10 @@ async function addClassification(classification_name) {
   try {
     const sql = "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *";
     const result = await pool.query(sql, [classification_name]);
-    return result.rows[0]; // return the inserted row
+    return result.rows[0];
   } catch (error) {
     console.error("addClassification error: " + error);
-    return null; // indicate failure
+    return null;
   }
 }
 
@@ -92,7 +92,7 @@ async function addInventoryItem({
     ];
 
     const result = await pool.query(sql, values);
-    return result.rows[0]; 
+    return result.rows[0];
   } catch (error) {
     console.error("addInventoryItem error: " + error);
     return null;
@@ -137,11 +137,26 @@ async function updateInventory(
   }
 }
 
+/* ***************************
+ *  Delete Inventory Item
+ * ************************** */
+async function deleteInventoryItem(inv_id) {
+  try {
+    const sql = "DELETE FROM public.inventory WHERE inv_id = $1 RETURNING *";
+    const data = await pool.query(sql, [inv_id]);
+    return data.rows[0]; // returns the deleted item (optional)
+  } catch (error) {
+    console.error("deleteInventoryItem error: " + error);
+    return null;
+  }
+}
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getInventoryById,
   addClassification,
   addInventoryItem,
-  updateInventory,  
+  updateInventory,
+  deleteInventoryItem, // <-- Exporting the delete function
 };

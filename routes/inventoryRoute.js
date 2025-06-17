@@ -48,7 +48,6 @@ router.post(
   "/add-classification",
   body("classification_name")
     .trim()
-    // Allow letters, numbers, spaces, and hyphens. Adjust if you want stricter rules
     .matches(/^[a-zA-Z0-9\s-]+$/)
     .withMessage(
       "Classification name must contain only letters, numbers, spaces, or hyphens."
@@ -74,16 +73,8 @@ router.post(
     .notEmpty()
     .withMessage("Classification is required")
     .toInt(),
-  body("inv_make")
-    .trim()
-    .notEmpty()
-    .withMessage("Make is required")
-    .escape(),
-  body("inv_model")
-    .trim()
-    .notEmpty()
-    .withMessage("Model is required")
-    .escape(),
+  body("inv_make").trim().notEmpty().withMessage("Make is required").escape(),
+  body("inv_model").trim().notEmpty().withMessage("Model is required").escape(),
   body("inv_year")
     .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
     .withMessage("Enter a valid year")
@@ -96,12 +87,7 @@ router.post(
     .isInt({ min: 0 })
     .withMessage("Miles must be zero or more")
     .toInt(),
-  body("inv_color")
-    .trim()
-    .notEmpty()
-    .withMessage("Color is required")
-    .escape(),
-  // Optional: you can add validation for inv_image and inv_thumbnail if needed
+  body("inv_color").trim().notEmpty().withMessage("Color is required").escape(),
   utilities.handleErrors(invController.handleAddInventory)
 );
 
@@ -122,16 +108,8 @@ router.post(
     .notEmpty()
     .withMessage("Classification is required")
     .toInt(),
-  body("inv_make")
-    .trim()
-    .notEmpty()
-    .withMessage("Make is required")
-    .escape(),
-  body("inv_model")
-    .trim()
-    .notEmpty()
-    .withMessage("Model is required")
-    .escape(),
+  body("inv_make").trim().notEmpty().withMessage("Make is required").escape(),
+  body("inv_model").trim().notEmpty().withMessage("Model is required").escape(),
   body("inv_year")
     .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
     .withMessage("Enter a valid year")
@@ -144,12 +122,25 @@ router.post(
     .isInt({ min: 0 })
     .withMessage("Miles must be zero or more")
     .toInt(),
-  body("inv_color")
-    .trim()
-    .notEmpty()
-    .withMessage("Color is required")
-    .escape(),
+  body("inv_color").trim().notEmpty().withMessage("Color is required").escape(),
   utilities.handleErrors(invController.updateInventory)
+);
+
+/* ***************************
+ * Delete Inventory View (Confirmation)
+ * *************************** */
+router.get(
+  "/delete/:inv_id",
+  utilities.handleErrors(invController.buildDeleteView) // fixed name here
+);
+
+/* ***************************
+ * Delete Inventory Submission
+ * *************************** */
+router.post(
+  "/delete",
+  body("inv_id").isInt().withMessage("Invalid inventory ID").toInt(),
+  utilities.handleErrors(invController.deleteInventoryItem)
 );
 
 module.exports = router;
