@@ -118,7 +118,7 @@ async function accountLogin(req, res) {
       });
     }
   } catch (error) {
-    console.error("❌ Login error:", error);
+    console.error(" Login error:", error);
     req.flash("notice", "Login failed due to an internal error.");
     return res.status(500).render("account/login", {
       title: "Login",
