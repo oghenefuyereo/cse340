@@ -4,11 +4,22 @@ const invController = require("../controllers/invController");
 const utilities = require("../utilities");
 const { body } = require("express-validator");
 
+// ✅ Import your middleware
+const {
+  requireLogin,
+  requireEmployeeOrManager,
+} = require("../middleware/authMiddleware");
+
 /* ***************************
  * Inventory Management View
- * (No restriction, open to all)
+ * 🔒 Only Employee or Manager
  * *************************** */
-router.get("/", utilities.handleErrors(invController.buildManagementView));
+router.get(
+  "/",
+  requireLogin,
+  requireEmployeeOrManager,
+  utilities.handleErrors(invController.buildManagementView)
+);
 
 /* ***************************
  * Inventory by classification (HTML view)
