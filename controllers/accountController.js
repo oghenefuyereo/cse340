@@ -94,9 +94,14 @@ async function accountLogin(req, res) {
     if (passwordMatch) {
       delete accountData.account_password;
 
-      req.session.accountData = accountData; // Store full account data
-      req.session.account_id = accountData.account_id; // Store account id separately
+      // Set session data
+      req.session.accountData = accountData; // Must include account_type!
+      req.session.account_id = accountData.account_id;
 
+      // DEBUG LOG: verify accountData including role
+      console.log("👤 Logged in user session data:", req.session.accountData);
+
+      // JWT for API auth if needed
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1h",
       });
@@ -198,7 +203,6 @@ async function updateAccount(req, res, next) {
       });
     }
 
-    // *** FIXED PARAMETER ORDER HERE ***
     const updateResult = await accountModel.updateAccountInfo(
       account_id,
       account_firstname,

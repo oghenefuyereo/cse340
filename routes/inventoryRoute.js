@@ -4,20 +4,20 @@ const invController = require("../controllers/invController");
 const utilities = require("../utilities");
 const { body } = require("express-validator");
 
-// ✅ Import your middleware
+// Import the correct middleware names
 const {
   requireLogin,
-  requireEmployeeOrManager,
+  requireEmployeeOrAdmin,  // Updated to Admin from Manager
 } = require("../middleware/authMiddleware");
 
 /* ***************************
  * Inventory Management View
- * 🔒 Only Employee or Manager
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.get(
   "/",
   requireLogin,
-  requireEmployeeOrManager,
+  requireEmployeeOrAdmin,
   utilities.handleErrors(invController.buildManagementView)
 );
 
@@ -50,21 +50,23 @@ router.get(
 
 /* ***************************
  * Add Classification View
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.get(
   "/add-classification",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   utilities.handleErrors(invController.buildAddClassificationView)
 );
 
 /* ***************************
  * Add Classification Submission
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.post(
   "/add-classification",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   body("classification_name")
     .trim()
     .matches(/^[a-zA-Z0-9\s-]+$/)
@@ -77,21 +79,23 @@ router.post(
 
 /* ***************************
  * Add Inventory View
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.get(
   "/add-inventory",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   utilities.handleErrors(invController.buildAddInventoryView)
 );
 
 /* ***************************
  * Add Inventory Submission
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.post(
   "/add-inventory",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   body("classification_id")
     .notEmpty()
     .withMessage("Classification is required")
@@ -116,21 +120,23 @@ router.post(
 
 /* ***************************
  * Edit Inventory View
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.get(
   "/edit/:inv_id",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   utilities.handleErrors(invController.editInventoryView)
 );
 
 /* ***************************
  * Update Inventory Submission
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.post(
   "/update/",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   body("classification_id")
     .notEmpty()
     .withMessage("Classification is required")
@@ -155,21 +161,23 @@ router.post(
 
 /* ***************************
  * Delete Inventory View (Confirmation)
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.get(
   "/delete/:inv_id",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   utilities.handleErrors(invController.buildDeleteView)
 );
 
 /* ***************************
  * Delete Inventory Submission
- * Only Employee or Admin allowed
+ * 🔒 Only Employee or Admin
  * *************************** */
 router.post(
   "/delete",
-  utilities.checkAdminOrEmployee,
+  requireLogin,
+  requireEmployeeOrAdmin,
   body("inv_id").isInt().withMessage("Invalid inventory ID").toInt(),
   utilities.handleErrors(invController.deleteInventoryItem)
 );
