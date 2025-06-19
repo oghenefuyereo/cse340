@@ -7,12 +7,20 @@ function requireLogin(req, res, next) {
 }
 
 function requireEmployeeOrAdmin(req, res, next) {
-  const role = req.session?.accountData?.account_type?.trim().toLowerCase();
+  const rawRole = req.session?.accountData?.account_type;
+  if (!rawRole) {
+    console.log("🔒 Role not found in session");
+    req.flash("notice", "Access denied. Employees or Admins only.");
+    return res.redirect("/account/login");
+  }
+
+  const role = rawRole.trim().toLowerCase();
   console.log("🔒 Checking role access:", role);
 
   if (role === "employee" || role === "admin") {
     return next();
   }
+
   req.flash("notice", "Access denied. Employees or Admins only.");
   return res.redirect("/account/login");
 }
