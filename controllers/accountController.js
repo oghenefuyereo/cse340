@@ -94,7 +94,8 @@ async function accountLogin(req, res) {
     if (passwordMatch) {
       delete accountData.account_password;
 
-      req.session.accountData = accountData; // Store in session
+      req.session.accountData = accountData; // Store full account data
+      req.session.account_id = accountData.account_id; // Store account id separately
 
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1h",

@@ -1,2 +1,12 @@
 <h1><%= title %></h1>
+
 <%- vehicleHtml %>
+
+<% if (vehicle) { %>
+  <form method="POST" action="/favorites/add">
+    <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+    <button type="submit">Add to Favorites ❤️</button>
+  </form>
+<% } else { %>
+  <p style="color: red;">Vehicle information is not available.</p>
+<% } %>

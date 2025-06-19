@@ -10,6 +10,7 @@ const baseController = require("./controllers/baseController");
 const staticRoutes = require("./routes/static");
 const inventoryRoute = require("./routes/inventoryRoute"); 
 const accountRoute = require("./routes/accountRoute");
+const favoritesRoute = require("./routes/favoriteRoute"); // adjust filename if different
 const utilities = require("./utilities");
 const bodyParser = require("body-parser"); 
 const cookieParser = require("cookie-parser");
@@ -72,6 +73,7 @@ app.use(utilities.checkJWTToken);
 app.use("/", staticRoutes);
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
+app.use("/favorites", favoritesRoute); 
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 /**************************************

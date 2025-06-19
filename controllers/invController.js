@@ -53,26 +53,32 @@ invCont.buildByClassificationId = async function (req, res, next) {
 };
 
 /* Vehicle Detail View */
+/* Vehicle Detail View */
 invCont.buildDetailView = async function (req, res, next) {
   try {
     const inv_id = req.params.inv_id;
-    const data = await invModel.getInventoryById(inv_id);
+    const vehicle = await invModel.getInventoryById(inv_id); // renamed from data to vehicle for clarity
 
-    if (!data) return next(); // triggers 404
+    if (!vehicle) return next(); // triggers 404 if no vehicle found
 
-    const vehicleHtml = utilities.buildDetailHTML(data);
+    const vehicleHtml = utilities.buildDetailHTML(vehicle);
     const nav = await utilities.getNav();
 
     res.render("inventory/detail", {
-      title: `${data.inv_year} ${data.inv_make} ${data.inv_model}`,
+      title: `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}`,
       nav,
       vehicleHtml,
+      vehicle,   // Pass the whole vehicle object to the view
+      success: req.flash("success"),
+      info: req.flash("info"),
+      error: req.flash("error"),
     });
   } catch (error) {
     console.error("Error in buildDetailView:", error);
     next(error);
   }
 };
+
 
 /* Add Classification View */
 invCont.buildAddClassificationView = async function (req, res, next) {

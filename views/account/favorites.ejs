@@ -1,0 +1,27 @@
+<% if (success && success.length > 0) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+
+<% if (info && info.length > 0) { %>
+  <div class="alert alert-info"><%= info %></div>
+<% } %>
+
+<% if (error && error.length > 0) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<% if (favorites.length === 0) { %>
+  <p>You don't have any favorite vehicles yet.</p>
+<% } else { %>
+  <ul>
+    <% favorites.forEach(favorite => { %>
+      <li>
+        <strong><%= favorite.inv_make %> <%= favorite.inv_model %> (<%= favorite.inv_year %>)</strong><br>
+        Price: $<%= favorite.inv_price %><br>
+        <a href="/inv/detail/<%= favorite.inv_id %>">View Details</a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
