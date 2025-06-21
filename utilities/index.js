@@ -1,9 +1,10 @@
 const invModel = require("../models/inventory-model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const Util = {};
 
 const { body, validationResult } = require("express-validator");
+
+const Util = {};
 
 /* ****************************************
  * Constructs the nav HTML unordered list
@@ -33,7 +34,7 @@ Util.getNav = async function () {
  ************************************** */
 Util.buildClassificationGrid = async function (data) {
   let grid;
-  if (data.length > 0) {
+  if (Array.isArray(data) && data.length > 0) {
     grid = '<div class="inventory-grid">';
     data.forEach((vehicle) => {
       grid += '<div class="inventory-item">';
@@ -176,7 +177,6 @@ Util.checkAdminOrEmployee = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    // No token found
     return res.status(401).render("account/login", {
       title: "Login",
       messages: ["You must be logged in to access this page."],
@@ -186,7 +186,6 @@ Util.checkAdminOrEmployee = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      // Token invalid or expired
       return res.status(401).render("account/login", {
         title: "Login",
         messages: ["Session expired or invalid. Please log in again."],
@@ -194,13 +193,11 @@ Util.checkAdminOrEmployee = (req, res, next) => {
       });
     }
 
-    // Check account type
     if (decoded.account_type === "Employee" || decoded.account_type === "Admin") {
-      res.locals.accountData = decoded; // Optionally set this here too
+      res.locals.accountData = decoded;
       res.locals.loggedin = 1;
       return next();
     } else {
-      // Unauthorized access
       return res.status(403).render("account/login", {
         title: "Login",
         messages: ["You do not have permission to access this page."],
