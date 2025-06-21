@@ -1,28 +1,37 @@
 UPDATE inventory
-SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
-WHERE inv_make = 'GM' AND inv_model = 'Hummer';
-
+SET inv_description = REPLACE(
+        inv_description,
+        'small interiors',
+        'a huge interior'
+    )
+WHERE inv_make = 'GM'
+    AND inv_model = 'Hummer';
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
-
-    
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/vehicles/vehicles/', '/vehicles/')
 WHERE inv_image LIKE '%/vehicles/vehicles/%';
-
 UPDATE inventory
-SET inv_thumbnail = REPLACE(inv_thumbnail, '/vehicles/vehicles/', '/vehicles/')
+SET inv_thumbnail = REPLACE(
+        inv_thumbnail,
+        '/vehicles/vehicles/',
+        '/vehicles/'
+    )
 WHERE inv_thumbnail LIKE '%/vehicles/vehicles/%';
-
-
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/')
 WHERE inv_image LIKE '/images/%'
-  AND inv_image NOT LIKE '/images/vehicles/%';
-
+    AND inv_image NOT LIKE '/images/vehicles/%';
 UPDATE inventory
 SET inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/')
 WHERE inv_thumbnail LIKE '/images/%'
-  AND inv_thumbnail NOT LIKE '/images/vehicles/%';
-
+    AND inv_thumbnail NOT LIKE '/images/vehicles/%';
+UPDATE account
+SET account_type = 'Employee'
+WHERE account_firstname = 'Happy'
+    AND account_lastname = 'Employee';
+UPDATE account
+SET account_type = 'Admin'
+WHERE account_firstname = 'Manager'
+    AND account_lastname = 'User';
