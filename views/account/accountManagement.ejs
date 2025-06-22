@@ -1,26 +1,46 @@
-<h1>Account Management</h1>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Dashboard</h2>
+      <a href="/account">Account Overview</a>
+      <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+        <a href="/inv/">Inventory Management</a>
+      <% } %>
+    </div>
 
-<h2>Welcome <%= accountData.account_firstname %></h2>
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1>Account Management</h1>
+        <p>Welcome <%= accountData.account_firstname %></p>
+      </div>
 
-<p>You're logged in.</p>
+      <!-- Main Dashboard Cards -->
+      <div class="card">
+        <p>You're logged in.</p>
+        <a href="/account/update/<%= accountData.account_id %>" class="button">Update Account Information</a>
 
-<p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+        <% if (messages && messages.length > 0) { %>
+          <div class="flash-messages">
+            <% messages.forEach(message => { %>
+              <p><%= message %></p>
+            <% }) %>
+          </div>
+        <% } %>
 
-<% if (messages && messages.length > 0) { %>
-  <div class="flash-messages">
-    <% messages.forEach(message => { %>
-      <p><%= message %></p>
-    <% }) %>
+        <% if (errors) { %>
+          <div class="errors">
+            <p><%= errors %></p>
+          </div>
+        <% } %>
+      </div>
+
+      <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+        <div class="card">
+          <h3>Inventory Management</h3>
+          <a href="/inv/" class="button">Go to Inventory Management</a>
+        </div>
+      <% } %>
+    </div>
   </div>
-<% } %>
-
-<% if (errors) { %>
-  <div class="errors">
-    <p><%= errors %></p>
-  </div>
-<% } %>
-
-<% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
-  <h3>Inventory Management</h3>
-  <p><a href="/inv/">Go to Inventory Management</a></p>
-<% } %>

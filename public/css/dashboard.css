@@ -1,0 +1,129 @@
+body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #1f2937;
+      padding: 1rem;
+      color: #fff;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #cbd5e1;
+      text-decoration: none;
+      margin: 0.5rem 0;
+    }
+
+    .sidebar a:hover {
+      color: #ffffff;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .header {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .flash-messages, .errors {
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+    }
+
+    .flash-messages {
+      background-color: #e6ffed;
+      border-left: 5px solid #34d399;
+      color: #065f46;
+    }
+
+    .errors {
+      background-color: #fee2e2;
+      border-left: 5px solid #ef4444;
+      color: #991b1b;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    a.button:hover {
+      background-color: #2563eb;
+    }
+
+    @media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .sidebar h2 {
+    display: none; /* hide sidebar title on small screens */
+  }
+
+  .sidebar a {
+    margin: 0 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  a.button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
