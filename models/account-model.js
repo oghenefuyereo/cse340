@@ -89,7 +89,7 @@ async function updateAccountInfo(account_id, account_firstname, account_lastname
 /* *****************************
  * Update account password by account_id
  * ***************************** */
-async function updateAccountPassword(account_id, hashed_password) {
+async function updateAccountPassword(hashed_password, account_id) {
   try {
     const sql = `
       UPDATE account

@@ -94,14 +94,9 @@ async function accountLogin(req, res) {
     if (passwordMatch) {
       delete accountData.account_password;
 
-      // Set session data
-      req.session.accountData = accountData; // Must include account_type!
+      req.session.accountData = accountData;
       req.session.account_id = accountData.account_id;
 
-      // DEBUG LOG: verify accountData including role
-      console.log("👤 Logged in user session data:", req.session.accountData);
-
-      // JWT for API auth if needed
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1h",
       });
@@ -124,7 +119,7 @@ async function accountLogin(req, res) {
       });
     }
   } catch (error) {
-    console.error(" Login error:", error);
+    console.error("Login error:", error);
     req.flash("notice", "Login failed due to an internal error.");
     return res.status(500).render("account/login", {
       title: "Login",
@@ -226,15 +221,15 @@ async function updateAccount(req, res, next) {
   }
 }
 
-/* Update password */
+/* ✅ Update password with redirect */
 async function updatePassword(req, res, next) {
   try {
     const { newPassword, confirmPassword } = req.body;
     const account_id = req.params.id;
-    const nav = await utilities.getNav();
 
     if (!newPassword || newPassword.length < 12) {
       req.flash("notice", "Password must be at least 12 characters.");
+      const nav = await utilities.getNav();
       const accountData = await accountModel.getAccountById(account_id);
       return res.status(400).render("account/updateAccount", {
         title: "Update Password",
@@ -247,6 +242,7 @@ async function updatePassword(req, res, next) {
 
     if (newPassword !== confirmPassword) {
       req.flash("notice", "Passwords do not match.");
+      const nav = await utilities.getNav();
       const accountData = await accountModel.getAccountById(account_id);
       return res.status(400).render("account/updateAccount", {
         title: "Update Password",
@@ -263,13 +259,7 @@ async function updatePassword(req, res, next) {
     req.session.accountData = accountData;
 
     req.flash("notice", updateResult ? "Password updated successfully." : "Password update failed.");
-    return res.render("account/accountManagement", {
-      title: "Account Management",
-      nav,
-      errors: null,
-      messages: req.flash("notice"),
-      accountData,
-    });
+    return res.redirect("/account"); // 👈 Redirect instead of render
   } catch (error) {
     next(error);
   }

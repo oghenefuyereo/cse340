@@ -33,8 +33,6 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
-// *** Added update account info routes ***
-
 // Show update account info form (protected)
 router.get(
   "/update/:id",
@@ -46,9 +44,16 @@ router.get(
 router.post(
   "/update/:id",
   utilities.checkLogin,
-  regValidate.updateRules(),      // Validation rules for update - you need to implement this
-  regValidate.checkUpdateData,    // Validation result handler for update - you need to implement this
+  regValidate.updateRules(),      // Validation rules for update
+  regValidate.checkUpdateData,    // Validation result handler for update
   utilities.handleErrors(accountController.updateAccount)
+);
+
+// ✅ NEW: Process password update form (protected)
+router.post(
+  "/updatePassword/:id",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.updatePassword)
 );
 
 // Logout route
